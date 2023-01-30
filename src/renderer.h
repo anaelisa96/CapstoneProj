@@ -11,7 +11,9 @@ class Renderer {
            const std::size_t grid_width, const std::size_t grid_height);
   ~Renderer();
 
+  // Render the snake object and the food
   void Render(Snake const snake, SDL_Point const &food);
+  // Updates the top bar of the screen with the score and the frames per second
   void UpdateWindowTitle(int score, int fps);
 
  private:

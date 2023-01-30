@@ -10,12 +10,12 @@ void Controller::ChangeDirection(Snake &snake, Snake::Direction input,
 }
 
 void Controller::HandleInput(bool &running, Snake &snake) const {
-  SDL_Event e;
-  while (SDL_PollEvent(&e)) {
-    if (e.type == SDL_QUIT) {
-      running = false;
-    } else if (e.type == SDL_KEYDOWN) {
-      switch (e.key.keysym.sym) {
+  SDL_Event e; // Union that contain structures for different event types.
+  while (SDL_PollEvent(&e)) { // Poll current pending events
+    if (e.type == SDL_QUIT) { // User want to quits
+      running = false; // Stop running the game
+    } else if (e.type == SDL_KEYDOWN) { // Check if event is a key press
+      switch (e.key.keysym.sym) { // See which key was pressed
         case SDLK_UP:
           ChangeDirection(snake, Snake::Direction::kUp,
                           Snake::Direction::kDown);

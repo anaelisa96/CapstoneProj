@@ -3,31 +3,32 @@
 #include "SDL.h"
 
 Game::Game(std::size_t grid_width, std::size_t grid_height)
-    : snake(grid_width, grid_height),
-      engine(dev()),
-      random_w(0, static_cast<int>(grid_width - 1)),
-      random_h(0, static_cast<int>(grid_height - 1)) {
-  PlaceFood();
+    : snake(grid_width, grid_height), // position the snake in the screen
+      engine(dev()), // random number generation tool using dev as seed
+      random_w(0, static_cast<int>(grid_width - 1)), // random number between 0 and the grid width
+      random_h(0, static_cast<int>(grid_height - 1)) { // random number between 0 and the grid width
+  PlaceFood(); // place food on the screen
 }
 
+// Game loop
 void Game::Run(Controller const &controller, Renderer &renderer,
                std::size_t target_frame_duration) {
-  Uint32 title_timestamp = SDL_GetTicks();
+  Uint32 title_timestamp = SDL_GetTicks(); // time stamp
   Uint32 frame_start;
   Uint32 frame_end;
   Uint32 frame_duration;
   int frame_count = 0;
-  bool running = true;
+  bool running = true; // tell if the game is running, it is initally set to true
 
   while (running) {
-    frame_start = SDL_GetTicks();
+    frame_start = SDL_GetTicks(); // timestamp for the frame start
 
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake);
     Update();
     renderer.Render(snake, food);
 
-    frame_end = SDL_GetTicks();
+    frame_end = SDL_GetTicks(); // timestamp for the frame end
 
     // Keep track of how long each loop through the input/update/render cycle
     // takes.
@@ -53,11 +54,13 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 void Game::PlaceFood() {
   int x, y;
   while (true) {
+    // Get random coordinates on the screen
     x = random_w(engine);
     y = random_h(engine);
     // Check that the location is not occupied by a snake item before placing
     // food.
     if (!snake.SnakeCell(x, y)) {
+      // Place food at he random coordinates in the screen and get out of the loop.
       food.x = x;
       food.y = y;
       return;
@@ -68,18 +71,21 @@ void Game::PlaceFood() {
 void Game::Update() {
   if (!snake.alive) return;
 
+  // Update the snake position
   snake.Update();
 
+  // Get head position
   int new_x = static_cast<int>(snake.head_x);
   int new_y = static_cast<int>(snake.head_y);
 
   // Check if there's food over here
+  // Check if head position is equal to the food position
   if (food.x == new_x && food.y == new_y) {
-    score++;
-    PlaceFood();
+    score++; // Increase the score
+    PlaceFood(); // Place foo at other random position
     // Grow snake and increase speed.
-    snake.GrowBody();
-    snake.speed += 0.02;
+    snake.GrowBody(); // The snake grow
+    snake.speed += 0.02; // Snake speed increases
   }
 }
 
