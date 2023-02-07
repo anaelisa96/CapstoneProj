@@ -1,0 +1,73 @@
+#include "welcomeScreen.h"
+
+void WelcomeScreen::PositionElement(int xPos, int yPos, bool isImg){
+    int elementWidth, elementHeight = 0;
+    SDL_QueryTexture(_texture, NULL, NULL, &elementWidth, &elementHeight);
+    if (isImg){
+        elementWidth  /=4;
+        elementHeight /=4;
+        xPos -= elementWidth/2;
+        yPos -= elementHeight/2;
+    }
+    _dstrect = { xPos, yPos, elementWidth, elementHeight };
+}
+
+void WelcomeScreen::CopyToRender(SDL_Renderer *render){
+    SDL_RenderCopy(render, _texture, NULL, &_dstrect);
+}
+
+void WelcomeScreen::SetTexture(SDL_Renderer *render){
+    _texture = SDL_CreateTextureFromSurface(render, _surface);
+}
+
+void Text::HandleInputText(SDL_Event &e, bool &renderInputText, bool &welcomeScreenOn){
+    if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_BACKSPACE && _myText.get()->length() > 10){
+        _myText.get()->pop_back();
+        renderInputText = true;
+    }
+    if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN){
+        welcomeScreenOn = false;
+    }
+    else if (e.type == SDL_TEXTINPUT){
+        *(_myText.get()) += e.text.text;
+        renderInputText = true;
+    }
+}
+
+void Text::SetTxtColor(Colors color){
+    switch (color)
+    {
+    case white:
+        _color = { 255, 255, 255, 255 };
+        break;
+    
+    default:
+        _color = { 255, 255, 255, 255 }; // Text set to white by default
+        break;
+    }
+}
+
+void Text::SetTxtFont(Fonts font, int size){
+    switch (font)
+    {
+    case arial:
+        _font = TTF_OpenFont("/home/workspace/Font/arial.ttf", size);
+        break;
+    
+    default:
+        _font = TTF_OpenFont("/home/workspace/Font/arial.ttf", size); // Text font set to arial by default
+        break;
+    }
+}
+
+void Text::SetTxtSurface(){
+    _surface = TTF_RenderText_Solid(_font, _myText.get()->c_str(),  _color);
+}
+
+std::shared_ptr<std::string> Text::GetInputText(){
+    return _myText;
+}
+
+void Image::SetImgSurface(){
+    _surface = SDL_LoadBMP(_imgPath);
+}

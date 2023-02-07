@@ -2,6 +2,9 @@
 #include <iostream>
 #include <string>
 
+// Add
+#include "SDL_ttf.h"
+
 // Renderer Constructor
 Renderer::Renderer(const std::size_t screen_width,
                    const std::size_t screen_height,
@@ -15,6 +18,10 @@ Renderer::Renderer(const std::size_t screen_width,
     std::cerr << "SDL could not initialize.\n";
     std::cerr << "SDL_Error: " << SDL_GetError() << "\n";
   }
+
+  // Add
+  if (TTF_Init() < 0)
+    std::cerr << "TTF could not initialize.\n";
 
   // Create Window - centered in the screen
   sdl_window = SDL_CreateWindow("Snake Game", SDL_WINDOWPOS_CENTERED,
@@ -39,7 +46,12 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(Snake const snake, SDL_Point const &food) {
+void Renderer::Render(Snake const snake, SDL_Point const &food, bool &welcomeScreenOn) {
+
+  if(welcomeScreenOn){
+    SDL_RenderPresent(sdl_renderer);
+    return;
+  }
   // Define a rectangle
   SDL_Rect block;
   block.w = screen_width / grid_width; // Width of one cell in the grid
@@ -80,4 +92,10 @@ void Renderer::Render(Snake const snake, SDL_Point const &food) {
 void Renderer::UpdateWindowTitle(int score, int fps) {
   std::string title{"Snake Score: " + std::to_string(score) + " FPS: " + std::to_string(fps)};
   SDL_SetWindowTitle(sdl_window, title.c_str());
+}
+
+void Renderer::ClearScreen(){
+  // Clear screen
+  SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF); // Set screen color to black, last one is opacity
+  SDL_RenderClear(sdl_renderer); // Draw color in the screen
 }

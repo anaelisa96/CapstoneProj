@@ -2,14 +2,24 @@
 #include <iostream>
 #include "SDL.h"
 
-Game::Game(std::size_t grid_width, std::size_t grid_height)
-    : snake(grid_width, grid_height), // position the snake in the screen
+// Add
+#include <string>
+#include "welcomeScreen.h"
+
+Game::Game(std::size_t grid_width, std::size_t grid_height, std::shared_ptr<std::string> welcome,
+           std::shared_ptr<std::string> username, std::shared_ptr<std::string> pressEnter, const char* imgPath)
+    : wText(std::move(welcome), white, arial, 44),
+      iText(std::move(username), white, arial, 22),
+      eText(std::move(pressEnter), white, arial, 22),
+      img(imgPath), 
+      snake(grid_width, grid_height), // position the snake in the screen
       engine(dev()), // random number generation tool using dev as seed
       random_w(0, static_cast<int>(grid_width - 1)), // random number between 0 and the grid width
       random_h(0, static_cast<int>(grid_height - 1)) { // random number between 0 and the grid width
   PlaceFood(); // place food on the screen
 }
 
+// Edit
 // Game loop
 void Game::Run(Controller const &controller, Renderer &renderer,
                std::size_t target_frame_duration) {
@@ -18,15 +28,26 @@ void Game::Run(Controller const &controller, Renderer &renderer,
   Uint32 frame_end;
   Uint32 frame_duration;
   int frame_count = 0;
+
+  // Add
+  PrepareWelcomeScreen(renderer);
+  renderer.ClearScreen();  
+  SDL_StartTextInput();
+
   bool running = true; // tell if the game is running, it is initally set to true
+  bool welcomeScreenOn = true;
 
   while (running) {
     frame_start = SDL_GetTicks(); // timestamp for the frame start
 
+    //Add
+    bool renderInputText = false;
+
     // Input, Update, Render - the main game loop.
-    controller.HandleInput(running, snake);
-    Update();
-    renderer.Render(snake, food);
+    controller.HandleInput(running, welcomeScreenOn, renderInputText, snake, iText,
+                           renderer);
+    Update(renderer, renderInputText, welcomeScreenOn);
+    renderer.Render(snake, food, welcomeScreenOn);
 
     frame_end = SDL_GetTicks(); // timestamp for the frame end
 
@@ -68,7 +89,23 @@ void Game::PlaceFood() {
   }
 }
 
-void Game::Update() {
+// Edit
+void Game::Update(Renderer &renderer, bool &renderInputText, bool &welcomeScreenOn) {
+  if (welcomeScreenOn){
+    if( renderInputText && iText.GetInputText().get()->c_str() != "Username: " ){
+      
+      renderer.ClearScreen();
+
+      iText.SetTxtSurface();
+      iText.SetTexture(renderer.GetRenderer());
+      iText.PositionElement(((int)640/2 - 250), (int)(640-100), false);
+      renderer.CopyToRender(iText);
+    }
+    renderer.CopyToRender(wText);
+    renderer.CopyToRender(img);
+    renderer.CopyToRender(eText);
+    return;
+  }
   if (!snake.alive) return;
 
   // Update the snake position
@@ -82,7 +119,7 @@ void Game::Update() {
   // Check if head position is equal to the food position
   if (food.x == new_x && food.y == new_y) {
     score++; // Increase the score
-    PlaceFood(); // Place foo at other random position
+    PlaceFood(); // Placed foo at other random position
     // Grow snake and increase speed.
     snake.GrowBody(); // The snake grow
     snake.speed += 0.02; // Snake speed increases
@@ -91,3 +128,15 @@ void Game::Update() {
 
 int Game::GetScore() const { return score; }
 int Game::GetSize() const { return snake.size; }
+
+// Add
+void Game::PrepareWelcomeScreen(Renderer &renderer){
+  wText.SetTexture(renderer.GetRenderer());
+  wText.PositionElement(((int)640/2 - 572/2), (int)(640/10), false);
+  iText.SetTexture(renderer.GetRenderer());
+  iText.PositionElement(((int)640/2 - 250), (int)(640-100), false);
+  img.SetTexture(renderer.GetRenderer());
+  img.PositionElement( (int)640/2, (int)640/2, true);
+  eText.SetTexture(renderer.GetRenderer());
+  eText.PositionElement(((int)640/2 - 250), (int)(640*10/13), false);
+}

@@ -1,0 +1,7 @@
+GIT:
+git remote rename origin upstream
+git remote add origin https://github.com/anaelisa96/CapstoneProj.git
+git push origin master
+
+SDL_ttf
+sudo apt install libsdl2-ttf-dev

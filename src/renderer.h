@@ -5,6 +5,10 @@
 #include "SDL.h"
 #include "snake.h"
 
+// Add
+#include <string>
+#include "welcomeScreen.h"
+
 class Renderer {
  public:
   Renderer(const std::size_t screen_width, const std::size_t screen_height,
@@ -12,9 +16,18 @@ class Renderer {
   ~Renderer();
 
   // Render the snake object and the food
-  void Render(Snake const snake, SDL_Point const &food);
+  void Render(Snake const snake, SDL_Point const &food, bool &welcomeScreenOn);
   // Updates the top bar of the screen with the score and the frames per second
   void UpdateWindowTitle(int score, int fps);
+  // Add
+  template <typename T>
+  void CopyToRender(T obj){
+    obj.CopyToRender(sdl_renderer);
+  }
+  SDL_Renderer* GetRenderer(){
+    return sdl_renderer;
+  }
+  void ClearScreen();
 
  private:
   SDL_Window *sdl_window;
