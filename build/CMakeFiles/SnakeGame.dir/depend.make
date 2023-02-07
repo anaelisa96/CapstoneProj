@@ -157,7 +157,6 @@ CMakeFiles/SnakeGame.dir/src/renderer.cpp.o: ../src/SDL_ttf.h
 CMakeFiles/SnakeGame.dir/src/renderer.cpp.o: ../src/renderer.cpp
 CMakeFiles/SnakeGame.dir/src/renderer.cpp.o: ../src/renderer.h
 CMakeFiles/SnakeGame.dir/src/renderer.cpp.o: ../src/snake.h
-CMakeFiles/SnakeGame.dir/src/renderer.cpp.o: ../src/welcomeScreen.h
 CMakeFiles/SnakeGame.dir/src/renderer.cpp.o: /usr/include/SDL2/SDL.h
 CMakeFiles/SnakeGame.dir/src/renderer.cpp.o: /usr/include/SDL2/SDL_assert.h
 CMakeFiles/SnakeGame.dir/src/renderer.cpp.o: /usr/include/SDL2/SDL_atomic.h

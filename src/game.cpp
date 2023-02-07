@@ -6,12 +6,22 @@
 #include <string>
 #include "welcomeScreen.h"
 
-Game::Game(std::size_t grid_width, std::size_t grid_height, std::shared_ptr<std::string> welcome,
-           std::shared_ptr<std::string> username, std::shared_ptr<std::string> pressEnter, const char* imgPath)
-    : wText(std::move(welcome), white, arial, 44),
-      iText(std::move(username), white, arial, 22),
-      eText(std::move(pressEnter), white, arial, 22),
-      img(imgPath), 
+#define wText_xPos (int)screen_width/2 - 286
+#define wText_yPos (int)screen_height  / 10
+#define iText_xPos (int)screen_width/2 - 250
+#define iText_yPos (int)screen_height  - 100
+#define eText_xPos (int)screen_width/2 - 250
+#define eText_yPos (int)screen_height * 10 / 13
+#define img_xPos   (int)screen_width/2
+#define img_yPos   (int)screen_height/2
+
+Game::Game(std::size_t screen_width, std::size_t screen_height, std::size_t grid_width, std::size_t grid_height,
+           std::shared_ptr<std::string> welcome, std::shared_ptr<std::string> username,
+           std::shared_ptr<std::string> pressEnter, const char* imgPath)
+    : wText(std::move(welcome),    white, arial, 44, wText_xPos, wText_yPos),
+      iText(std::move(username),   white, arial, 22, iText_xPos, iText_yPos),
+      eText(std::move(pressEnter), white, arial, 22, eText_xPos, eText_yPos),
+      img(imgPath, img_xPos, img_yPos), 
       snake(grid_width, grid_height), // position the snake in the screen
       engine(dev()), // random number generation tool using dev as seed
       random_w(0, static_cast<int>(grid_width - 1)), // random number between 0 and the grid width
@@ -98,7 +108,7 @@ void Game::Update(Renderer &renderer, bool &renderInputText, bool &welcomeScreen
 
       iText.SetTxtSurface();
       iText.SetTexture(renderer.GetRenderer());
-      iText.PositionElement(((int)640/2 - 250), (int)(640-100), false);
+      iText.PositionElement(false);
       renderer.CopyToRender(iText);
     }
     renderer.CopyToRender(wText);
@@ -132,11 +142,11 @@ int Game::GetSize() const { return snake.size; }
 // Add
 void Game::PrepareWelcomeScreen(Renderer &renderer){
   wText.SetTexture(renderer.GetRenderer());
-  wText.PositionElement(((int)640/2 - 572/2), (int)(640/10), false);
+  wText.PositionElement(false);
   iText.SetTexture(renderer.GetRenderer());
-  iText.PositionElement(((int)640/2 - 250), (int)(640-100), false);
+  iText.PositionElement(false);
   img.SetTexture(renderer.GetRenderer());
-  img.PositionElement( (int)640/2, (int)640/2, true);
+  img.PositionElement(true);
   eText.SetTexture(renderer.GetRenderer());
-  eText.PositionElement(((int)640/2 - 250), (int)(640*10/13), false);
+  eText.PositionElement(false);
 }

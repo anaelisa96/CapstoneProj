@@ -9,12 +9,12 @@
 
 // Add
 #include "welcomeScreen.h"
-#include <memory>
 
 class Game {
  public:
-  Game(std::size_t grid_width, std::size_t grid_height, std::shared_ptr<std::string> welcome,
-       std::shared_ptr<std::string> username, std::shared_ptr<std::string> pressEnter, const char* imgPath);
+  Game(std::size_t screen_width, std::size_t screen_height, std::size_t grid_width, std::size_t grid_height,
+           std::shared_ptr<std::string> welcome, std::shared_ptr<std::string> username,
+           std::shared_ptr<std::string> pressEnter, const char* imgPath);
   void Run(Controller const &controller, Renderer &renderer,
            std::size_t target_frame_duration);
   int GetScore() const;

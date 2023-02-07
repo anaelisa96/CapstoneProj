@@ -4,8 +4,6 @@
 #include "renderer.h"
 
 // Add
-#include "SDL_ttf.h"
-#include "welcomeScreen.h"
 #include <memory>
 
 int main() {
@@ -19,14 +17,13 @@ int main() {
   // Add
   std::shared_ptr<std::string> welcome (new std::string("Welcome to the Snake Game"));
   std::shared_ptr<std::string> username (new std::string("Username: "));
-  std::shared_ptr<std::string> pressEnter (new std::string("Type you username and press Enter to start the game!"));
+  std::shared_ptr<std::string> pressEnter (new std::string("Type you username and press enter to start the game!"));
   const char *imgPath = "/home/workspace/CppND-Capstone-Snake-Game/build/mySnake2.bmp";
 
-  
   // Create a Renderer, a Controller and a Game object
   Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
   Controller controller;
-  Game game(kGridWidth, kGridHeight, std::move(welcome), std::move(username), std::move(pressEnter), imgPath);
+  Game game(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight, std::move(welcome), std::move(username), std::move(pressEnter), imgPath);
   // Start the game loop
   game.Run(controller, renderer, kMsPerFrame);
   std::cout << "Game has terminated successfully!\n";

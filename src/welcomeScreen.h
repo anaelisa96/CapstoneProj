@@ -22,23 +22,25 @@ enum Fonts{
 
 class WelcomeScreen{
     public:
-        WelcomeScreen(){};
+        WelcomeScreen(int xPos, int yPos) : _xPos(xPos), _yPos(yPos){};
         ~WelcomeScreen(){}
 
         void SetTexture(SDL_Renderer *render);
-        void PositionElement(int xPos, int yPos, bool isImg);
+        void PositionElement(bool isImg);
         void CopyToRender(SDL_Renderer *render);
         void PrepareElement(SDL_Renderer *render, bool isImg);
     protected:
         SDL_Rect _dstrect;
         SDL_Surface *_surface;
         SDL_Texture *_texture;
+        int _xPos, _yPos;
 };
 
 class Text : public WelcomeScreen{
     public:
 
-    Text(std::shared_ptr<std::string> text, Colors color, Fonts font, int size){
+    Text(std::shared_ptr<std::string> text, Colors color, Fonts font, int size, int xPos,
+         int yPos) : WelcomeScreen(xPos, yPos){
         _myText = std::move(text);
         SetTxtColor(color);
         SetTxtFont(font, size);
@@ -56,11 +58,13 @@ class Text : public WelcomeScreen{
     std::shared_ptr<std::string> _myText;
     SDL_Color _color;
     TTF_Font* _font;
+    //int _xPos;
+    //int _yPos;
 };
 
 class Image : public WelcomeScreen{
     public:
-    Image(const char* imgPath) : _imgPath(imgPath){
+    Image(const char* imgPath, int xPos, int yPos) : _imgPath(imgPath), WelcomeScreen(xPos, yPos){
         SetImgSurface(); }
     ~Image(){}
     private:

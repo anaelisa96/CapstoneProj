@@ -5,10 +5,6 @@
 #include "SDL.h"
 #include "snake.h"
 
-// Add
-#include <string>
-#include "welcomeScreen.h"
-
 class Renderer {
  public:
   Renderer(const std::size_t screen_width, const std::size_t screen_height,
@@ -37,6 +33,7 @@ class Renderer {
   const std::size_t screen_height;
   const std::size_t grid_width;
   const std::size_t grid_height;
+
 };
 
 #endif

@@ -1,15 +1,15 @@
 #include "welcomeScreen.h"
 
-void WelcomeScreen::PositionElement(int xPos, int yPos, bool isImg){
+void WelcomeScreen::PositionElement(bool isImg){
     int elementWidth, elementHeight = 0;
     SDL_QueryTexture(_texture, NULL, NULL, &elementWidth, &elementHeight);
     if (isImg){
         elementWidth  /=4;
         elementHeight /=4;
-        xPos -= elementWidth/2;
-        yPos -= elementHeight/2;
+        _xPos -= elementWidth/2;
+        _yPos -= elementHeight/2;
     }
-    _dstrect = { xPos, yPos, elementWidth, elementHeight };
+    _dstrect = { _xPos, _yPos, elementWidth, elementHeight };
 }
 
 void WelcomeScreen::CopyToRender(SDL_Renderer *render){

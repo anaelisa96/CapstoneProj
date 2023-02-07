@@ -158,7 +158,6 @@ CMakeFiles/SnakeGame.dir/src/renderer.cpp.o
  /home/workspace/CppND-Capstone-Snake-Game/src/renderer.cpp
  /home/workspace/CppND-Capstone-Snake-Game/src/renderer.h
  /home/workspace/CppND-Capstone-Snake-Game/src/snake.h
- /home/workspace/CppND-Capstone-Snake-Game/src/welcomeScreen.h
  /usr/include/SDL2/SDL.h
  /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
