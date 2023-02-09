@@ -23,7 +23,7 @@ int main() {
   // Create a Renderer, a Controller and a Game object
   Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
   Controller controllerPlayer1(SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT);
-  Controller controllerPlayer2(SDLK_w, SDLK_z, SDLK_a, SDLK_s);
+  Controller controllerPlayer2(SDLK_w, SDLK_s, SDLK_a, SDLK_d);
   Game game(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight, std::move(welcome), std::move(username), std::move(pressEnter), imgPath);
   // Start the game loop
   game.Run(controllerPlayer1, controllerPlayer2, renderer, kMsPerFrame);

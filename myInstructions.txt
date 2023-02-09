@@ -1,9 +1,9 @@
 GIT:
 git remote -v --> info about remote repo
-git add.
+git add .
 git commit -m "message"
 git push origin master
-myToken: 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
+
 
 SDL_ttf
 sudo apt install libsdl2-ttf-dev

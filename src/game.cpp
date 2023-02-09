@@ -51,16 +51,16 @@ void Game::Run(Controller const &controllerPlayer1, Controller const &controller
   bool welcomeScreenOn = false;
 
   while (running) {
+        //Add
+    bool renderInputText = false;
     frame_start = SDL_GetTicks(); // timestamp for the frame start
 
-    //Add
-    bool renderInputText = false;
-
-
-    std::thread player1Input(&Controller::HandleInput, controllerPlayer1, std::ref(running), std::ref(welcomeScreenOn),
+    /*std::thread player1Input(&Controller::HandleInput, controllerPlayer1, std::ref(running), std::ref(welcomeScreenOn),
       std::ref(renderInputText), std::ref(snake), std::ref(iText), std::ref(renderer));
     std::thread player2Input(&Controller::HandleInput, controllerPlayer2, std::ref(running), std::ref(welcomeScreenOn),
-      std::ref(renderInputText), std::ref(snake2), std::ref(iText), std::ref(renderer));
+      std::ref(renderInputText), std::ref(snake2), std::ref(iText), std::ref(renderer));*/
+    std::thread player1Input(&Controller::HandleInput, controllerPlayer1, std::ref(running), std::ref(snake));
+    std::thread player2Input(&Controller::HandleInput, controllerPlayer2, std::ref(running), std::ref(snake2));
     player1Input.join();
     player2Input.join();
 
