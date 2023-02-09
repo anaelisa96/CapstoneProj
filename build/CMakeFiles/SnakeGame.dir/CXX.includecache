@@ -39,6 +39,8 @@ welcomeScreen.h
 /home/workspace/CppND-Capstone-Snake-Game/src/game.h
 random
 -
+thread
+-
 SDL.h
 /home/workspace/CppND-Capstone-Snake-Game/src/SDL.h
 controller.h
@@ -50,18 +52,6 @@ snake.h
 welcomeScreen.h
 /home/workspace/CppND-Capstone-Snake-Game/src/welcomeScreen.h
 
-/home/workspace/CppND-Capstone-Snake-Game/src/main.cpp
-iostream
--
-controller.h
-/home/workspace/CppND-Capstone-Snake-Game/src/controller.h
-game.h
-/home/workspace/CppND-Capstone-Snake-Game/src/game.h
-renderer.h
-/home/workspace/CppND-Capstone-Snake-Game/src/renderer.h
-memory
--
-
 /home/workspace/CppND-Capstone-Snake-Game/src/renderer.h
 vector
 -
@@ -75,6 +65,10 @@ vector
 -
 SDL.h
 /home/workspace/CppND-Capstone-Snake-Game/src/SDL.h
+
+/home/workspace/CppND-Capstone-Snake-Game/src/welcomeScreen.cpp
+welcomeScreen.h
+/home/workspace/CppND-Capstone-Snake-Game/src/welcomeScreen.h
 
 /home/workspace/CppND-Capstone-Snake-Game/src/welcomeScreen.h
 SDL_ttf.h

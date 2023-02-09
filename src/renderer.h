@@ -12,7 +12,8 @@ class Renderer {
   ~Renderer();
 
   // Render the snake object and the food
-  void Render(Snake const snake, SDL_Point const &food, bool &welcomeScreenOn);
+  //void Render(Snake const snake, SDL_Point const &food, bool &welcomeScreenOn);
+  void Render(Snake const snake, Snake const snake2, SDL_Point const &food, bool &welcomeScreenOn);
   // Updates the top bar of the screen with the score and the frames per second
   void UpdateWindowTitle(int score, int fps);
   // Add

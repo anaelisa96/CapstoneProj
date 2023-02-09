@@ -12,12 +12,17 @@ class Snake {
   // Snake Constructor: accepts the grid height and width and sets a position for the head (middle of the screen)
   Snake(int grid_width, int grid_height)
       : grid_width(grid_width),
-        grid_height(grid_height),
-        head_x(grid_width / 2),
-        head_y(grid_height / 2) {}
+        grid_height(grid_height){}//,
+        //head_x(grid_width / 2),
+        //head_y(grid_height / 2) {}
+
+  void setPosition(float x, float y){
+  	head_x = x;
+    head_y = y;
+  }
 
   // Update the snake at each game loop iteration
-  void Update();
+  void Update(Snake otherSnake);
 
   // Once the snake eat some food this function is called
   void GrowBody();
@@ -41,7 +46,7 @@ class Snake {
   // When Update() is called, it calls UpdateHead()
   void UpdateHead();
   // Update the vector body with the coordintes with the of the snake body
-  void UpdateBody(SDL_Point &current_cell, SDL_Point &prev_cell);
+  void UpdateBody(SDL_Point &current_cell, SDL_Point &prev_cell, Snake otherSnake);
 
   // When the snake eats some food, we set this variable to true and in the next loop iteration the snake body grows
   bool growing{false};

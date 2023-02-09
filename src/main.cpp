@@ -22,10 +22,11 @@ int main() {
 
   // Create a Renderer, a Controller and a Game object
   Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
-  Controller controller;
+  Controller controllerPlayer1(SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT);
+  Controller controllerPlayer2(SDLK_w, SDLK_z, SDLK_a, SDLK_s);
   Game game(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight, std::move(welcome), std::move(username), std::move(pressEnter), imgPath);
   // Start the game loop
-  game.Run(controller, renderer, kMsPerFrame);
+  game.Run(controllerPlayer1, controllerPlayer2, renderer, kMsPerFrame);
   std::cout << "Game has terminated successfully!\n";
   std::cout << "Score: " << game.GetScore() << "\n";
   std::cout << "Size: " << game.GetSize() << "\n";

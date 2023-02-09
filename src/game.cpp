@@ -23,15 +23,18 @@ Game::Game(std::size_t screen_width, std::size_t screen_height, std::size_t grid
       eText(std::move(pressEnter), white, arial, 22, eText_xPos, eText_yPos),
       img(imgPath, img_xPos, img_yPos), 
       snake(grid_width, grid_height), // position the snake in the screen
+      snake2(grid_width, grid_height),
       engine(dev()), // random number generation tool using dev as seed
       random_w(0, static_cast<int>(grid_width - 1)), // random number between 0 and the grid width
       random_h(0, static_cast<int>(grid_height - 1)) { // random number between 0 and the grid width
+  snake.setPosition(random_w(engine),random_h(engine));
+  snake2.setPosition(random_w(engine),random_h(engine));
   PlaceFood(); // place food on the screen
 }
 
 // Edit
 // Game loop
-void Game::Run(Controller const &controller, Renderer &renderer,
+void Game::Run(Controller const &controllerPlayer1, Controller const &controllerPlayer2, Renderer &renderer,
                std::size_t target_frame_duration) {
   Uint32 title_timestamp = SDL_GetTicks(); // time stamp
   Uint32 frame_start;
@@ -45,7 +48,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
   SDL_StartTextInput();
 
   bool running = true; // tell if the game is running, it is initally set to true
-  bool welcomeScreenOn = true;
+  bool welcomeScreenOn = false;
 
   while (running) {
     frame_start = SDL_GetTicks(); // timestamp for the frame start
@@ -53,11 +56,19 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     //Add
     bool renderInputText = false;
 
+
+    std::thread player1Input(&Controller::HandleInput, controllerPlayer1, std::ref(running), std::ref(welcomeScreenOn),
+      std::ref(renderInputText), std::ref(snake), std::ref(iText), std::ref(renderer));
+    std::thread player2Input(&Controller::HandleInput, controllerPlayer2, std::ref(running), std::ref(welcomeScreenOn),
+      std::ref(renderInputText), std::ref(snake2), std::ref(iText), std::ref(renderer));
+    player1Input.join();
+    player2Input.join();
+
     // Input, Update, Render - the main game loop.
-    controller.HandleInput(running, welcomeScreenOn, renderInputText, snake, iText,
-                           renderer);
+    //controllerPlayer1.HandleInput(running, welcomeScreenOn, renderInputText, snake, iText,
+    //                       renderer);
     Update(renderer, renderInputText, welcomeScreenOn);
-    renderer.Render(snake, food, welcomeScreenOn);
+    renderer.Render(snake, snake2, food, welcomeScreenOn);
 
     frame_end = SDL_GetTicks(); // timestamp for the frame end
 
@@ -90,7 +101,7 @@ void Game::PlaceFood() {
     y = random_h(engine);
     // Check that the location is not occupied by a snake item before placing
     // food.
-    if (!snake.SnakeCell(x, y)) {
+    if (!snake.SnakeCell(x, y) && !snake2.SnakeCell(x,y)) {
       // Place food at he random coordinates in the screen and get out of the loop.
       food.x = x;
       food.y = y;
@@ -116,14 +127,18 @@ void Game::Update(Renderer &renderer, bool &renderInputText, bool &welcomeScreen
     renderer.CopyToRender(eText);
     return;
   }
-  if (!snake.alive) return;
+  //if (!snake.alive) return;
+  if (!snake.alive || !snake2.alive) return;
 
   // Update the snake position
-  snake.Update();
+  snake.Update(snake2);
+  snake2.Update(snake);
 
   // Get head position
   int new_x = static_cast<int>(snake.head_x);
   int new_y = static_cast<int>(snake.head_y);
+  int new_x2 = static_cast<int>(snake2.head_x);
+  int new_y2 = static_cast<int>(snake2.head_y);
 
   // Check if there's food over here
   // Check if head position is equal to the food position
@@ -134,6 +149,15 @@ void Game::Update(Renderer &renderer, bool &renderInputText, bool &welcomeScreen
     snake.GrowBody(); // The snake grow
     snake.speed += 0.02; // Snake speed increases
   }
+
+  if (food.x == new_x2 && food.y == new_y2) {
+    score++; // Increase the score
+    PlaceFood(); // Placed foo at other random position
+    // Grow snake and increase speed.
+    snake2.GrowBody(); // The snake grow
+    snake2.speed += 0.02; // Snake speed increases
+  }
+
 }
 
 int Game::GetScore() const { return score; }

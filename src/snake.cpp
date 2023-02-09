@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iostream>
 
-void Snake::Update() {
+void Snake::Update(Snake otherSnake) {
   SDL_Point prev_cell{
       static_cast<int>(head_x),
       static_cast<int>(
@@ -16,7 +16,7 @@ void Snake::Update() {
   // cell.
   // The body of the snake is updated only if the snake head has moved to a new cell.
   if (current_cell.x != prev_cell.x || current_cell.y != prev_cell.y) {
-    UpdateBody(current_cell, prev_cell);
+    UpdateBody(current_cell, prev_cell, otherSnake);
   }
 }
 
@@ -46,7 +46,7 @@ void Snake::UpdateHead() {
 }
 
 // The snake body updates by making the previous head cell as part of the body
-void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) {
+void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell, Snake otherSnake) {
   // Add previous head location to vector
   body.push_back(prev_head_cell);
 
@@ -65,6 +65,27 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
     if (current_head_cell.x == item.x && current_head_cell.y == item.y) {
       alive = false;
     }
+  }
+
+  // Check if the snake has died.
+  /*hiiting himself*/
+  for (auto const &item : body) {
+    if (current_head_cell.x == static_cast<int>(item.x) && current_head_cell.y == static_cast<int>(item.y)) {
+      alive = false;
+    }
+  }
+  
+  /*hiiting otherSanke's body*/
+  for (auto const &item : otherSnake.body) {
+   if (current_head_cell.x == item.x && current_head_cell.y == item.y) {
+      alive = false;
+    }
+  }
+  
+  /*hiiting otherSanke's head*/
+  if (current_head_cell.x == static_cast<int>(otherSnake.head_x) && current_head_cell.y == static_cast<int>(otherSnake.head_y)) {
+      std::cout << "snakes collided" << std::endl;
+      alive = false;
   }
 }
 
