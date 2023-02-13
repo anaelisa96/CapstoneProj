@@ -11,8 +11,10 @@ class Controller {
   /*Controller(SDL_Keycode upKey, SDL_Keycode downKey, SDL_Keycode leftKey, SDL_Keycode rightKey) :
              _upKey(upKey), _downKey(downKey), _leftKey(leftKey), _rightKey(rightKey){}*/
              
-  void HandleInput(bool &running,/* bool &welcomeScreenOn, bool &renderInputText, */Snake &snake/*,
-                            Text &iText, Renderer &renderer*/, Snake &snake2) const;
+  //void HandleInput(bool &running,/* bool &welcomeScreenOn, bool &renderInputText, */Snake &snake/*,
+  //                          Text &iText, Renderer &renderer*/, Snake &snake2) const;
+  void HandleInput(bool &running, bool &welcomeScreenOn, bool &renderInputText, Snake &snake, Snake &snake2,
+                            Text &iText, Renderer &renderer) const;
 
  private:
   void ChangeDirection(Snake &snake, Snake::Direction input,

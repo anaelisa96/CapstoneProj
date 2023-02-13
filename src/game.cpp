@@ -48,7 +48,7 @@ void Game::Run(Controller const &controller/*Player1, Controller const &controll
   SDL_StartTextInput();
 
   bool running = true; // tell if the game is running, it is initally set to true
-  bool welcomeScreenOn = false;
+  bool welcomeScreenOn = true;
 
   while (running) {
         //Add
@@ -67,7 +67,8 @@ void Game::Run(Controller const &controller/*Player1, Controller const &controll
     // Input, Update, Render - the main game loop.
     //controllerPlayer1.HandleInput(running, welcomeScreenOn, renderInputText, snake, iText,
     //                       renderer);
-    controller.HandleInput(running, snake, snake2);
+    //controller.HandleInput(running, snake, snake2);
+    controller.HandleInput(running, welcomeScreenOn, renderInputText, snake, snake2, iText, renderer);
     Update(renderer, renderInputText, welcomeScreenOn);
     renderer.Render(snake, snake2, food, welcomeScreenOn);
 
