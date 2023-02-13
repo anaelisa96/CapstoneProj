@@ -51,11 +51,11 @@ void Text::SetTxtFont(Fonts font, int size){
     switch (font)
     {
     case arial:
-        _font = TTF_OpenFont("arial.ttf", size);
+        _font = TTF_OpenFont("build/arial.ttf", size);
         break;
     
     default:
-        _font = TTF_OpenFont("arial.ttf", size); // Text font set to arial by default
+        _font = TTF_OpenFont("build/arial.ttf", size); // Text font set to arial by default
         break;
     }
 }
