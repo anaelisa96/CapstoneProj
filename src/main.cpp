@@ -18,15 +18,16 @@ int main() {
   std::shared_ptr<std::string> welcome (new std::string("Welcome to the Snake Game"));
   std::shared_ptr<std::string> username (new std::string("Username: "));
   std::shared_ptr<std::string> pressEnter (new std::string("Type you username and press enter to start the game!"));
-  const char *imgPath = "/home/workspace/CppND-Capstone-Snake-Game/build/mySnake2.bmp";
+  const char *imgPath = "mySnake2.bmp";
 
   // Create a Renderer, a Controller and a Game object
   Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
-  Controller controllerPlayer1(SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT);
-  Controller controllerPlayer2(SDLK_w, SDLK_s, SDLK_a, SDLK_d);
+  //Controller controllerPlayer1(SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT);
+  //Controller controllerPlayer2(SDLK_w, SDLK_s, SDLK_a, SDLK_d);
+  Controller controller;
   Game game(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight, std::move(welcome), std::move(username), std::move(pressEnter), imgPath);
   // Start the game loop
-  game.Run(controllerPlayer1, controllerPlayer2, renderer, kMsPerFrame);
+  game.Run(controller/*Player1, controllerPlayer2*/, renderer, kMsPerFrame);
   std::cout << "Game has terminated successfully!\n";
   std::cout << "Score: " << game.GetScore() << "\n";
   std::cout << "Size: " << game.GetSize() << "\n";

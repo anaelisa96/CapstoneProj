@@ -34,7 +34,7 @@ Game::Game(std::size_t screen_width, std::size_t screen_height, std::size_t grid
 
 // Edit
 // Game loop
-void Game::Run(Controller const &controllerPlayer1, Controller const &controllerPlayer2, Renderer &renderer,
+void Game::Run(Controller const &controller/*Player1, Controller const &controllerPlayer2*/, Renderer &renderer,
                std::size_t target_frame_duration) {
   Uint32 title_timestamp = SDL_GetTicks(); // time stamp
   Uint32 frame_start;
@@ -59,14 +59,15 @@ void Game::Run(Controller const &controllerPlayer1, Controller const &controller
       std::ref(renderInputText), std::ref(snake), std::ref(iText), std::ref(renderer));
     std::thread player2Input(&Controller::HandleInput, controllerPlayer2, std::ref(running), std::ref(welcomeScreenOn),
       std::ref(renderInputText), std::ref(snake2), std::ref(iText), std::ref(renderer));*/
-    std::thread player1Input(&Controller::HandleInput, controllerPlayer1, std::ref(running), std::ref(snake));
+    /*std::thread player1Input(&Controller::HandleInput, controllerPlayer1, std::ref(running), std::ref(snake));
     std::thread player2Input(&Controller::HandleInput, controllerPlayer2, std::ref(running), std::ref(snake2));
     player1Input.join();
-    player2Input.join();
+    player2Input.join();*/
 
     // Input, Update, Render - the main game loop.
     //controllerPlayer1.HandleInput(running, welcomeScreenOn, renderInputText, snake, iText,
     //                       renderer);
+    controller.HandleInput(running, snake, snake2);
     Update(renderer, renderInputText, welcomeScreenOn);
     renderer.Render(snake, snake2, food, welcomeScreenOn);
 

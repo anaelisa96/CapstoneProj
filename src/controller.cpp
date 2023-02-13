@@ -13,11 +13,9 @@ void Controller::ChangeDirection(Snake &snake, Snake::Direction input,
 }
 
 void Controller::HandleInput(bool &running,/* bool &welcomeScreenOn, bool &renderInputText, */Snake &snake/*,
-                            Text &iText, Renderer &renderer*/) const {
+                            Text &iText, Renderer &renderer*/, Snake &snake2) const {
   SDL_Event e; // Union that contain structures for different event types.
   while (SDL_PollEvent(&e)) { // Poll current pending events
-
-    std::cout << "I am an event!" << std::endl;
     if (e.type == SDL_QUIT) { // User want to quit
       running = false; // Stop running the game
     }
@@ -28,25 +26,39 @@ void Controller::HandleInput(bool &running,/* bool &welcomeScreenOn, bool &rende
       renderer.CopyToRender(iText);
     */
     else if (/*!welcomeScreenOn &&*/e.type == SDL_KEYDOWN) {
-      if(e.key.keysym.sym == _upKey){
-          ChangeDirection(snake, Snake::Direction::kUp, Snake::Direction::kDown);
-          std::cout << "Snake " << &snake << "is going up! " << std::endl;
-          break;
-      }
-      else if (e.key.keysym.sym == _downKey){
-          ChangeDirection(snake, Snake::Direction::kDown, Snake::Direction::kUp);
-          std::cout << "Snake " << &snake << "is going down! " << std::endl;
-          break;
-      }
-      else if (e.key.keysym.sym == _leftKey){
-          ChangeDirection(snake, Snake::Direction::kLeft, Snake::Direction::kRight);
-          std::cout << "Snake " << &snake << "is going left! " << std::endl;
-          break;
-      }
-      else if(e.key.keysym.sym == _rightKey){
-          ChangeDirection(snake, Snake::Direction::kRight, Snake::Direction::kLeft);
-          std::cout << "Snake " << &snake << "is going right! " << std::endl;
-          break;
+      switch(e.key.keysym.sym){
+        case SDLK_UP:
+            ChangeDirection(snake, Snake::Direction::kUp, Snake::Direction::kDown);
+            std::cout << "Snake 1 is going up! " << std::endl;
+            break;
+        case SDLK_DOWN:
+            ChangeDirection(snake, Snake::Direction::kDown, Snake::Direction::kUp);
+            std::cout << "Snake 1 is going down! " << std::endl;
+            break;
+        case SDLK_LEFT:
+            ChangeDirection(snake, Snake::Direction::kLeft, Snake::Direction::kRight);
+            std::cout << "Snake 1 is going left! " << std::endl;
+            break;
+        case SDLK_RIGHT:
+            ChangeDirection(snake, Snake::Direction::kRight, Snake::Direction::kLeft);
+            std::cout << "Snake 1 is going right! " << std::endl;
+            break;
+        case SDLK_w:
+            ChangeDirection(snake2, Snake::Direction::kUp, Snake::Direction::kDown);
+            std::cout << "Snake 2 is going up! " << std::endl;
+            break;
+        case SDLK_s:
+            ChangeDirection(snake2, Snake::Direction::kDown, Snake::Direction::kUp);
+            std::cout << "Snake 2 is going down! " << std::endl;
+            break;
+        case SDLK_a:
+            ChangeDirection(snake2, Snake::Direction::kLeft, Snake::Direction::kRight);
+            std::cout << "Snake 2 is going left! " << std::endl;
+            break;
+        case SDLK_d:
+            ChangeDirection(snake2, Snake::Direction::kRight, Snake::Direction::kLeft);
+            std::cout << "Snake 2 is going right! " << std::endl;
+            break;
       }
     }
   }

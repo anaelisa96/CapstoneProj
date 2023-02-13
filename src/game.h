@@ -16,7 +16,7 @@ class Game {
   Game(std::size_t screen_width, std::size_t screen_height, std::size_t grid_width, std::size_t grid_height,
            std::shared_ptr<std::string> welcome, std::shared_ptr<std::string> username,
            std::shared_ptr<std::string> pressEnter, const char* imgPath);
-  void Run(Controller const &controllerPlayer1, Controller const &controllerPlayer2, Renderer &renderer,
+  void Run(Controller const &controller/*Player1, Controller const &controllerPlayer2*/, Renderer &renderer,
            std::size_t target_frame_duration);
   int GetScore() const;
   int GetSize() const;
