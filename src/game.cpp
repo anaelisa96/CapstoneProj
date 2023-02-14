@@ -6,20 +6,27 @@
 #include <string>
 #include "welcomeScreen.h"
 
-#define wText_xPos (int)screen_width/2 - 286
-#define wText_yPos (int)screen_height  / 10
-#define iText_xPos (int)screen_width/2 - 250
-#define iText_yPos (int)screen_height  - 100
-#define eText_xPos (int)screen_width/2 - 250
-#define eText_yPos (int)screen_height * 10 / 13
-#define img_xPos   (int)screen_width/2
-#define img_yPos   (int)screen_height/2
+#define wText_xPos       (int)screen_width/2 - 286
+#define wText_yPos       (int)screen_height  / 10
+#define tText_xPos       (int)screen_width/2 - 290
+#define tText_yPos       (int)screen_height * 10 / 15
+#define player1Text_xPos (int)screen_width/2 - 250
+#define player1Text_yPos (int)screen_height  - 180
+#define player2Text_xPos (int)screen_width/2 - 250
+#define player2Text_yPos (int)screen_height  - 150
+#define eText_xPos       (int)screen_width/2
+#define eText_yPos       (int)screen_height -   50
+#define img_xPos         (int)screen_width/2
+#define img_yPos         (int)screen_height/2 - 60
 
 Game::Game(std::size_t screen_width, std::size_t screen_height, std::size_t grid_width, std::size_t grid_height,
-           std::shared_ptr<std::string> welcome, std::shared_ptr<std::string> username,
+           std::shared_ptr<std::string> welcome, std::shared_ptr<std::string> player1Username,
+           std::shared_ptr<std::string> player2Username, std::shared_ptr<std::string> pressTab, 
            std::shared_ptr<std::string> pressEnter, const char* imgPath)
     : wText(std::move(welcome),    white, arial, 44, wText_xPos, wText_yPos),
-      iText(std::move(username),   white, arial, 22, iText_xPos, iText_yPos),
+      tText(std::move(pressTab),   white, arial, 22, tText_xPos, tText_yPos),
+      player1Text(std::move(player1Username),   white, arial, 22, player1Text_xPos, player1Text_yPos),
+      player2Text(std::move(player2Username),   white, arial, 22, player2Text_xPos, player2Text_yPos),
       eText(std::move(pressEnter), white, arial, 22, eText_xPos, eText_yPos),
       img(imgPath, img_xPos, img_yPos), 
       snake(grid_width, grid_height), // position the snake in the screen
@@ -49,6 +56,7 @@ void Game::Run(Controller const &controller/*Player1, Controller const &controll
 
   bool running = true; // tell if the game is running, it is initally set to true
   bool welcomeScreenOn = true;
+  bool insertPlayer1Username = true;
 
   while (running) {
         //Add
@@ -68,7 +76,7 @@ void Game::Run(Controller const &controller/*Player1, Controller const &controll
     //controllerPlayer1.HandleInput(running, welcomeScreenOn, renderInputText, snake, iText,
     //                       renderer);
     //controller.HandleInput(running, snake, snake2);
-    controller.HandleInput(running, welcomeScreenOn, renderInputText, snake, snake2, iText, renderer);
+    controller.HandleInput(running, welcomeScreenOn, renderInputText, insertPlayer1Username, snake, snake2, player1Text, player2Text, renderer);
     Update(renderer, renderInputText, welcomeScreenOn);
     renderer.Render(snake, snake2, food, welcomeScreenOn);
 
@@ -81,7 +89,7 @@ void Game::Run(Controller const &controller/*Player1, Controller const &controll
 
     // After every second, update the window title.
     if (frame_end - title_timestamp >= 1000) {
-      renderer.UpdateWindowTitle(score, frame_count);
+      renderer.UpdateWindowTitle(score, score2, frame_count);
       frame_count = 0;
       title_timestamp = frame_end;
     }
@@ -93,6 +101,7 @@ void Game::Run(Controller const &controller/*Player1, Controller const &controll
       SDL_Delay(target_frame_duration - frame_duration);
     }
   }
+  SaveUsername();
 }
 
 void Game::PlaceFood() {
@@ -115,16 +124,28 @@ void Game::PlaceFood() {
 // Edit
 void Game::Update(Renderer &renderer, bool &renderInputText, bool &welcomeScreenOn) {
   if (welcomeScreenOn){
-    if( renderInputText && iText.GetInputText().get()->c_str() != "Username: " ){
+    if( renderInputText && player1Text.GetInputText().get()->c_str() != "Player 1 Username: " ){
       
       renderer.ClearScreen();
 
-      iText.SetTxtSurface();
-      iText.SetTexture(renderer.GetRenderer());
-      iText.PositionElement(false);
-      renderer.CopyToRender(iText);
+      player1Text.SetTxtSurface();
+      player1Text.SetTexture(renderer.GetRenderer());
+      player1Text.PositionElement(false);
+      renderer.CopyToRender(player1Text);
+    }
+    if( renderInputText && player2Text.GetInputText().get()->c_str() != "Player 2 Username: " ){
+      
+      renderer.ClearScreen();
+
+      player2Text.SetTxtSurface();
+      player2Text.SetTexture(renderer.GetRenderer());
+      player2Text.PositionElement(false);
+      renderer.CopyToRender(player2Text);
     }
     renderer.CopyToRender(wText);
+    renderer.CopyToRender(tText);
+    renderer.CopyToRender(player1Text);
+    renderer.CopyToRender(player2Text);
     renderer.CopyToRender(img);
     renderer.CopyToRender(eText);
     return;
@@ -153,7 +174,7 @@ void Game::Update(Renderer &renderer, bool &renderInputText, bool &welcomeScreen
   }
 
   if (food.x == new_x2 && food.y == new_y2) {
-    score++; // Increase the score
+    score2++; // Increase the score2
     PlaceFood(); // Placed foo at other random position
     // Grow snake and increase speed.
     snake2.GrowBody(); // The snake grow
@@ -162,15 +183,27 @@ void Game::Update(Renderer &renderer, bool &renderInputText, bool &welcomeScreen
 
 }
 
-int Game::GetScore() const { return score; }
+int Game::GetScore()  const { return score; }
+int Game::GetScore2() const { return score2; }
 int Game::GetSize() const { return snake.size; }
+int Game::GetSize2() const { return snake2.size; }
+void Game::SaveUsername() {
+  _player1Username = player1Text.GetUsername();
+  _player2Username = player2Text.GetUsername();
+  }
+std::string Game::GetPlayer1Username(){return _player1Username;}
+std::string Game::GetPlayer2Username(){return _player2Username;}
 
 // Add
 void Game::PrepareWelcomeScreen(Renderer &renderer){
   wText.SetTexture(renderer.GetRenderer());
   wText.PositionElement(false);
-  iText.SetTexture(renderer.GetRenderer());
-  iText.PositionElement(false);
+  tText.SetTexture(renderer.GetRenderer());
+  tText.PositionElement(false);
+  player1Text.SetTexture(renderer.GetRenderer());
+  player1Text.PositionElement(false);
+  player2Text.SetTexture(renderer.GetRenderer());
+  player2Text.PositionElement(false);
   img.SetTexture(renderer.GetRenderer());
   img.PositionElement(true);
   eText.SetTexture(renderer.GetRenderer());

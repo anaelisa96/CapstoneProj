@@ -48,9 +48,10 @@ class Text : public WelcomeScreen{
     }
     ~Text() {}
 
-    void HandleInputText(SDL_Event &e, bool &renderInputText, bool &WelcomeScreenOn);
+    void HandleInputText(SDL_Event &e, bool &renderInputText, bool &WelcomeScreenOn,  bool &insertPlayer1Username);
     void SetTxtSurface();
     std::shared_ptr<std::string> GetInputText();
+    std::string GetUsername();
     
     private:
     void SetTxtColor(Colors color);

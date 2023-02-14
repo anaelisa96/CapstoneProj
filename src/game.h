@@ -14,20 +14,28 @@
 class Game {
  public:
   Game(std::size_t screen_width, std::size_t screen_height, std::size_t grid_width, std::size_t grid_height,
-           std::shared_ptr<std::string> welcome, std::shared_ptr<std::string> username,
-           std::shared_ptr<std::string> pressEnter, const char* imgPath);
+     std::shared_ptr<std::string> welcome, std::shared_ptr<std::string> player1Username,
+     std::shared_ptr<std::string> player2Username, std::shared_ptr<std::string> pressEnter, 
+     std::shared_ptr<std::string> pressTab, const char* imgPath);
   void Run(Controller const &controller/*Player1, Controller const &controllerPlayer2*/, Renderer &renderer,
            std::size_t target_frame_duration);
   int GetScore() const;
+  int GetScore2() const;
   int GetSize() const;
+  int GetSize2() const;
+  void SaveUsername();
+  std::string GetPlayer1Username();
+  std::string GetPlayer2Username();
 
  private:
   Snake snake;
   Snake snake2;
   SDL_Point food;
 
-  Text wText, iText, eText;
+  Text wText, player1Text, player2Text, eText, tText;
   Image img;
+  std::string _player1Username;
+  std::string _player2Username;
 
   // Random numbers used to place the food
   std::random_device dev;
@@ -36,6 +44,7 @@ class Game {
   std::uniform_int_distribution<int> random_h;
 
   int score{0};
+  int score2{0};
 
   void PlaceFood();
   void Update(Renderer &renderer, bool &renderInputText, bool &welcomeScreenOn);

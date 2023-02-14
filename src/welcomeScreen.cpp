@@ -20,13 +20,16 @@ void WelcomeScreen::SetTexture(SDL_Renderer *render){
     _texture = SDL_CreateTextureFromSurface(render, _surface);
 }
 
-void Text::HandleInputText(SDL_Event &e, bool &renderInputText, bool &welcomeScreenOn){
+void Text::HandleInputText(SDL_Event &e, bool &renderInputText, bool &welcomeScreenOn, bool &insertPlayer1Username){
     if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_BACKSPACE && _myText.get()->length() > 10){
         _myText.get()->pop_back();
         renderInputText = true;
     }
-    if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN){
+    else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN){
         welcomeScreenOn = false;
+    }
+    else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_TAB){
+        insertPlayer1Username = false;
     }
     else if (e.type == SDL_TEXTINPUT){
         *(_myText.get()) += e.text.text;
@@ -66,6 +69,10 @@ void Text::SetTxtSurface(){
 
 std::shared_ptr<std::string> Text::GetInputText(){
     return _myText;
+}
+
+std::string Text::GetUsername(){
+    return *_myText.get();
 }
 
 void Image::SetImgSurface(){

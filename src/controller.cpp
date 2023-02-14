@@ -12,8 +12,8 @@ void Controller::ChangeDirection(Snake &snake, Snake::Direction input,
   return;
 }
 
-void Controller::HandleInput(bool &running, bool &welcomeScreenOn, bool &renderInputText, Snake &snake,
-                            Snake &snake2, Text &iText, Renderer &renderer) const {
+void Controller::HandleInput(bool &running, bool &welcomeScreenOn, bool &renderInputText, bool &insertPlayer1Username,
+                            Snake &snake, Snake &snake2, Text &player1Text, Text &player2Text, Renderer &renderer) const {
   SDL_Event e; // Union that contain structures for different event types.
   while (SDL_PollEvent(&e)) { // Poll current pending events
     if (e.type == SDL_QUIT) { // User want to quit
@@ -21,9 +21,14 @@ void Controller::HandleInput(bool &running, bool &welcomeScreenOn, bool &renderI
     }
     else if( welcomeScreenOn){
       if (e.type == SDL_TEXTINPUT || e.type == SDL_KEYDOWN)
-         iText.HandleInputText(e, renderInputText, welcomeScreenOn);
+        if (insertPlayer1Username)
+          player1Text.HandleInputText(e, renderInputText, welcomeScreenOn, insertPlayer1Username);
+        else
+          player2Text.HandleInputText(e, renderInputText, welcomeScreenOn, insertPlayer1Username);
+
       // Render input Text
-      renderer.CopyToRender(iText);
+      renderer.CopyToRender(player1Text);
+      renderer.CopyToRender(player2Text);
     }
     else if (!welcomeScreenOn && e.type == SDL_KEYDOWN) {
       switch(e.key.keysym.sym){

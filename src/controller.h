@@ -13,8 +13,8 @@ class Controller {
              
   //void HandleInput(bool &running,/* bool &welcomeScreenOn, bool &renderInputText, */Snake &snake/*,
   //                          Text &iText, Renderer &renderer*/, Snake &snake2) const;
-  void HandleInput(bool &running, bool &welcomeScreenOn, bool &renderInputText, Snake &snake, Snake &snake2,
-                            Text &iText, Renderer &renderer) const;
+  void HandleInput(bool &running, bool &welcomeScreenOn, bool &renderInputText, bool &insertPlayer1Username,
+                            Snake &snake, Snake &snake2, Text &player1Text, Text &player2Text, Renderer &renderer) const;
 
  private:
   void ChangeDirection(Snake &snake, Snake::Direction input,
