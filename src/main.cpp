@@ -6,6 +6,7 @@
 // Add
 #include <memory>
 #include <fstream>
+#include <map>
 
 int main() {
   // Constants useful for the project
@@ -37,11 +38,42 @@ int main() {
   std::cout << "Size: " << game.GetSize() << "\n";
   std::cout << "Score 2: " << game.GetScore2() << "\n";
   std::cout << "Size 2: " << game.GetSize2() << "\n";
-  std::ofstream myfile;
-  myfile.open ("example.txt");
-  myfile << game.GetPlayer1Username().substr(19) << " -->  " << "Score: " << game.GetScore()  << "\n" 
-         << game.GetPlayer2Username().substr(19) << " -->  " << "Score: " << game.GetScore2() << "\n";
-  myfile.close();
- 
+  std::cout << "Username 1: " << game.GetPlayer1Username().substr(19) << "\n";
+  std::cout << "Username 2: " << game.GetPlayer2Username().substr(19) << "\n";
+
+  std::fstream outputFile("outBestScores.txt", std::ios::app | std::ios::in);
+  std::string myline;
+  int maxScore = game.GetScore();
+  int maxScore2 = game.GetScore2();
+
+  if ( outputFile.is_open() ){
+    outputFile << game.GetPlayer1Username().substr(19) << " -->  " << "Score: " << game.GetScore()  << "\n" 
+               << game.GetPlayer2Username().substr(19) << " -->  " << "Score: " << game.GetScore2() << "\n";
+  }
+  else
+  {
+    std::cout << "Couldn't open output file!" << std::endl;
+  }
+  
+  outputFile.close();
+
+  outputFile.open("outBestScores.txt");
+  while ( outputFile ) {
+      std::getline (outputFile, myline);
+      std::string score;
+      if (myline.find(game.GetPlayer1Username().substr(19) + " ") != std::string::npos){
+        score = myline.substr(myline.find(":") + 1) ;
+        if (maxScore < std::atoi(score.c_str()))
+          maxScore = std::atoi(score.c_str());
+      }
+      else if (myline.find(game.GetPlayer2Username().substr(19) + " ") != std::string::npos){
+        score = myline.substr(myline.find(":") + 1) ;
+        if (maxScore2 < std::atoi(score.c_str()))
+          maxScore2 = std::atoi(score.c_str());
+      }
+    }
+  std::cout << "Player 1 max score is " << maxScore << std::endl;
+  std::cout << "Player 2 max score is " << maxScore2 << std::endl;  
+
   return 0;
 }
