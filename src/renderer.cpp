@@ -116,3 +116,8 @@ void Renderer::ClearScreen(){
   SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF); // Set screen color to black, last one is opacity
   SDL_RenderClear(sdl_renderer); // Draw color in the screen
 }
+
+void Renderer::PresentRenderer(){
+  // Update Screen
+  SDL_RenderPresent(sdl_renderer);
+}

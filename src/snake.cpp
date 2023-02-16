@@ -63,28 +63,20 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell, 
   // Check if the snake has died, by checking if the head coordinates match with any of the body coordinates
   for (auto const &item : body) {
     if (current_head_cell.x == item.x && current_head_cell.y == item.y) {
+      std::cout << "Snake hit itself." << std::endl;
       alive = false;
     }
   }
 
-  // Check if the snake has died.
-  /*hiiting himself*/
-  for (auto const &item : body) {
-    if (current_head_cell.x == static_cast<int>(item.x) && current_head_cell.y == static_cast<int>(item.y)) {
-      alive = false;
-    }
-  }
-  
-  /*hiiting otherSanke's body*/
   for (auto const &item : otherSnake.body) {
    if (current_head_cell.x == item.x && current_head_cell.y == item.y) {
+      std::cout << "Snakes collided." << std::endl;
       alive = false;
     }
   }
   
-  /*hiiting otherSanke's head*/
   if (current_head_cell.x == static_cast<int>(otherSnake.head_x) && current_head_cell.y == static_cast<int>(otherSnake.head_y)) {
-      std::cout << "snakes collided" << std::endl;
+      std::cout << "Snakes collided." << std::endl;
       alive = false;
   }
 }

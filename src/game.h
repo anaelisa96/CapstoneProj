@@ -36,6 +36,12 @@ class Game {
   Image img;
   std::string _player1Username;
   std::string _player2Username;
+  std::shared_ptr<std::string> gameOver;
+  std::shared_ptr<std::string> player1BestScore;
+  std::shared_ptr<std::string> player2BestScore;
+
+  int maxScore, maxScore2;
+  bool newRecord1, newRecord2;
 
   // Random numbers used to place the food
   std::random_device dev;
@@ -47,8 +53,10 @@ class Game {
   int score2{0};
 
   void PlaceFood();
-  void Update(Renderer &renderer, bool &renderInputText, bool &welcomeScreenOn);
+  void Update(Renderer &renderer, bool &running, bool &renderInputText, bool &welcomeScreenOn);
   void PrepareWelcomeScreen(Renderer &renderer);
+  void BestScoreComputation(int &maxScore, int &maxScore2, bool &newRecord1, bool &newRecord2);
+  void PresentGameOverScreen(Renderer &renderer, int &maxScore, int &maxScore2, bool &newRecord1, bool &newRecord2);
 };
 
 #endif

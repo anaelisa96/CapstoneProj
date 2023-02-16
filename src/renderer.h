@@ -25,6 +25,7 @@ class Renderer {
     return sdl_renderer;
   }
   void ClearScreen();
+  void PresentRenderer();
 
  private:
   SDL_Window *sdl_window;
