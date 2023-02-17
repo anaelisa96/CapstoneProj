@@ -15,9 +15,9 @@ enum Colors{
      
 enum Fonts{
     arial,
-    calibri,
-    centuryGothic,
-    timeNewRoman
+    gameOverF,
+    welcomeF,
+    textF
 };
 
 class WelcomeScreen{
@@ -29,6 +29,10 @@ class WelcomeScreen{
         void PositionElement(bool isImg);
         void CopyToRender(SDL_Renderer *render);
         void PrepareElement(SDL_Renderer *render, bool isImg);
+        void EditPosition(int xPosNew, int yPosNew){
+            _xPos = xPosNew;
+            _yPos = yPosNew;
+        }
     protected:
         SDL_Rect _dstrect;
         SDL_Surface *_surface;
@@ -52,6 +56,9 @@ class Text : public WelcomeScreen{
     void SetTxtSurface();
     std::shared_ptr<std::string> GetInputText();
     std::string GetUsername();
+    void EditText(std::shared_ptr<std::string> newText){
+        _myText = std::move(newText);
+    }
     
     private:
     void SetTxtColor(Colors color);

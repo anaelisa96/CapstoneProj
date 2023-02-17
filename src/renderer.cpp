@@ -57,7 +57,7 @@ void Renderer::Render(Snake const snake, Snake const snake2, SDL_Point const &fo
   block.h = screen_height / grid_height; // Height of one cell in the grid
 
   // Clear screen
-  SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF); // Set screen color to black, last one is opacity
+  SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x00, 0x00, 0xFF); // Set screen color to black, last one is opacity
   SDL_RenderClear(sdl_renderer); // Draw color in the screen
 
   // Render food
@@ -113,7 +113,7 @@ void Renderer::UpdateWindowTitle(int score, int score2, int fps) {
 
 void Renderer::ClearScreen(){
   // Clear screen
-  SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF); // Set screen color to black, last one is opacity
+  SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x00, 0x00, 0xFF); // Set screen color to black, last one is opacity
   SDL_RenderClear(sdl_renderer); // Draw color in the screen
 }
 

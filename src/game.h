@@ -32,13 +32,15 @@ class Game {
   Snake snake2;
   SDL_Point food;
 
-  Text wText, player1Text, player2Text, eText, tText;
+  Text wText, player1User, player2User, eText, tText;
   Image img;
   std::string _player1Username;
   std::string _player2Username;
   std::shared_ptr<std::string> gameOver;
   std::shared_ptr<std::string> player1BestScore;
   std::shared_ptr<std::string> player2BestScore;
+  std::shared_ptr<std::string> player1CurrentScore;
+  std::shared_ptr<std::string> player2CurrentScore;
 
   int maxScore, maxScore2;
   bool newRecord1, newRecord2;

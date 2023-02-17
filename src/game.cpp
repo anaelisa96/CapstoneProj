@@ -13,18 +13,22 @@
 #define wText_yPos       (int)screen_height  / 10
 #define tText_xPos       (int)screen_width/2 - 290
 #define tText_yPos       (int)screen_height * 10 / 15
-#define player1Text_xPos (int)screen_width/2 - 250
-#define player1Text_yPos (int)screen_height  - 180
-#define player2Text_xPos (int)screen_width/2 - 250
-#define player2Text_yPos (int)screen_height  - 150
+#define player1User_xPos (int)screen_width/2 - 250
+#define player1User_yPos (int)screen_height  - 180
+#define player2User_xPos (int)screen_width/2 - 250
+#define player2User_yPos (int)screen_height  - 150
 #define eText_xPos       (int)screen_width/2
 #define eText_yPos       (int)screen_height -   50
 #define gText_xPos       200
 #define gText_yPos       100
+#define c1Text_xPos      100
+#define c1Text_yPos      230
+#define c2Text_xPos      100
+#define c2Text_yPos      330
 #define b1Text_xPos      100
-#define b1Text_yPos      300
+#define b1Text_yPos      260
 #define b2Text_xPos      100
-#define b2Text_yPos      400
+#define b2Text_yPos      360
 #define img_xPos         (int)screen_width/2
 #define img_yPos         (int)screen_height/2 - 60
 
@@ -32,10 +36,10 @@ Game::Game(std::size_t screen_width, std::size_t screen_height, std::size_t grid
            std::shared_ptr<std::string> welcome, std::shared_ptr<std::string> player1Username,
            std::shared_ptr<std::string> player2Username, std::shared_ptr<std::string> pressTab, 
            std::shared_ptr<std::string> pressEnter, const char* imgPath)
-    : wText(std::move(welcome),    white, arial, 44, wText_xPos, wText_yPos),
-      tText(std::move(pressTab),   white, arial, 22, tText_xPos, tText_yPos),
-      player1Text(std::move(player1Username),   white, arial, 22, player1Text_xPos, player1Text_yPos),
-      player2Text(std::move(player2Username),   white, arial, 22, player2Text_xPos, player2Text_yPos),
+    : wText(std::move(welcome),    green, welcomeF, 28, wText_xPos, wText_yPos),
+      tText(std::move(pressTab),   white, textF, 16, tText_xPos, tText_yPos),
+      player1User(std::move(player1Username),   white, textF, 16, player1User_xPos, player1User_yPos),
+      player2User(std::move(player2Username),   white, textF, 16, player2User_xPos, player2User_yPos),
       eText(std::move(pressEnter), white, arial, 22, eText_xPos, eText_yPos),
       img(imgPath, img_xPos, img_yPos), 
       snake(grid_width, grid_height), // position the snake in the screen
@@ -50,8 +54,7 @@ Game::Game(std::size_t screen_width, std::size_t screen_height, std::size_t grid
 
 // Edit
 // Game loop
-void Game::Run(Controller const &controller/*Player1, Controller const &controllerPlayer2*/, Renderer &renderer,
-               std::size_t target_frame_duration) {
+void Game::Run(Controller const &controller, Renderer &renderer, std::size_t target_frame_duration) {
   Uint32 title_timestamp = SDL_GetTicks(); // time stamp
   Uint32 frame_start;
   Uint32 frame_end;
@@ -72,20 +75,7 @@ void Game::Run(Controller const &controller/*Player1, Controller const &controll
     bool renderInputText = false;
     frame_start = SDL_GetTicks(); // timestamp for the frame start
 
-    /*std::thread player1Input(&Controller::HandleInput, controllerPlayer1, std::ref(running), std::ref(welcomeScreenOn),
-      std::ref(renderInputText), std::ref(snake), std::ref(iText), std::ref(renderer));
-    std::thread player2Input(&Controller::HandleInput, controllerPlayer2, std::ref(running), std::ref(welcomeScreenOn),
-      std::ref(renderInputText), std::ref(snake2), std::ref(iText), std::ref(renderer));*/
-    /*std::thread player1Input(&Controller::HandleInput, controllerPlayer1, std::ref(running), std::ref(snake));
-    std::thread player2Input(&Controller::HandleInput, controllerPlayer2, std::ref(running), std::ref(snake2));
-    player1Input.join();
-    player2Input.join();*/
-
-    // Input, Update, Render - the main game loop.
-    //controllerPlayer1.HandleInput(running, welcomeScreenOn, renderInputText, snake, iText,
-    //                       renderer);
-    //controller.HandleInput(running, snake, snake2);
-    controller.HandleInput(running, welcomeScreenOn, renderInputText, insertPlayer1Username, snake, snake2, player1Text, player2Text, renderer);
+    controller.HandleInput(running, welcomeScreenOn, renderInputText, insertPlayer1Username, snake, snake2, player1User, player2User, renderer);
     Update(renderer, running, renderInputText, welcomeScreenOn);
     renderer.Render(snake, snake2, food, welcomeScreenOn);
 
@@ -132,31 +122,30 @@ void Game::PlaceFood() {
   }
 }
 
-// Edit
 void Game::Update(Renderer &renderer, bool &running, bool &renderInputText, bool &welcomeScreenOn) {
   if (welcomeScreenOn){
-    if( renderInputText && player1Text.GetInputText().get()->c_str() != "Player 1 Username: " ){
+    if( renderInputText && player1User.GetInputText().get()->c_str() != "Player 1 Username: " ){
       
       renderer.ClearScreen();
 
-      player1Text.SetTxtSurface();
-      player1Text.SetTexture(renderer.GetRenderer());
-      player1Text.PositionElement(false);
-      renderer.CopyToRender(player1Text);
+      player1User.SetTxtSurface();
+      player1User.SetTexture(renderer.GetRenderer());
+      player1User.PositionElement(false);
+      renderer.CopyToRender(player1User);
     }
-    if( renderInputText && player2Text.GetInputText().get()->c_str() != "Player 2 Username: " ){
+    if( renderInputText && player2User.GetInputText().get()->c_str() != "Player 2 Username: " ){
       
       renderer.ClearScreen();
 
-      player2Text.SetTxtSurface();
-      player2Text.SetTexture(renderer.GetRenderer());
-      player2Text.PositionElement(false);
-      renderer.CopyToRender(player2Text);
+      player2User.SetTxtSurface();
+      player2User.SetTexture(renderer.GetRenderer());
+      player2User.PositionElement(false);
+      renderer.CopyToRender(player2User);
     }
     renderer.CopyToRender(wText);
     renderer.CopyToRender(tText);
-    renderer.CopyToRender(player1Text);
-    renderer.CopyToRender(player2Text);
+    renderer.CopyToRender(player1User);
+    renderer.CopyToRender(player2User);
     renderer.CopyToRender(img);
     renderer.CopyToRender(eText);
     return;
@@ -194,7 +183,6 @@ void Game::Update(Renderer &renderer, bool &running, bool &renderInputText, bool
     snake2.GrowBody(); // The snake grow
     snake2.speed += 0.02; // Snake speed increases
   }
-
 }
 
 int Game::GetScore()  const { return score; }
@@ -202,22 +190,21 @@ int Game::GetScore2() const { return score2; }
 int Game::GetSize() const { return snake.size; }
 int Game::GetSize2() const { return snake2.size; }
 void Game::SaveUsername() {
-  _player1Username = player1Text.GetUsername();
-  _player2Username = player2Text.GetUsername();
+  _player1Username = player1User.GetUsername();
+  _player2Username = player2User.GetUsername();
   }
 std::string Game::GetPlayer1Username(){return _player1Username;}
 std::string Game::GetPlayer2Username(){return _player2Username;}
 
-// Add
 void Game::PrepareWelcomeScreen(Renderer &renderer){
   wText.SetTexture(renderer.GetRenderer());
   wText.PositionElement(false);
   tText.SetTexture(renderer.GetRenderer());
   tText.PositionElement(false);
-  player1Text.SetTexture(renderer.GetRenderer());
-  player1Text.PositionElement(false);
-  player2Text.SetTexture(renderer.GetRenderer());
-  player2Text.PositionElement(false);
+  player1User.SetTexture(renderer.GetRenderer());
+  player1User.PositionElement(false);
+  player2User.SetTexture(renderer.GetRenderer());
+  player2User.PositionElement(false);
   img.SetTexture(renderer.GetRenderer());
   img.PositionElement(true);
   eText.SetTexture(renderer.GetRenderer());
@@ -287,29 +274,56 @@ void Game::PresentGameOverScreen(Renderer &renderer, int &maxScore, int &maxScor
   renderer.ClearScreen();
 
   gameOver = std::make_shared<std::string> ("Game Over");
+
+  player1User.EditText(std::make_shared<std::string> (player1User.GetInputText().get()->substr(19) + ":"));
+  player2User.EditText(std::make_shared<std::string> (player2User.GetInputText().get()->substr(19) + ":"));
+  player1User.EditPosition(100, 200);
+  player2User.EditPosition(100, 300);
+
+  player1CurrentScore = std::make_shared<std::string> ("Current score = " + std::to_string(GetScore()));
+  player2CurrentScore = std::make_shared<std::string> ("Current score = " + std::to_string(GetScore2()));
   
-  if(newRecord1)
-    player1BestScore = std::make_shared<std::string> ("Player 1: New Record: your best score is " + std::to_string(maxScore));
-  else
-    player1BestScore = std::make_shared<std::string> ("Player 1: Your best score is " + std::to_string(maxScore));
+  newRecord1? player1BestScore = std::make_shared<std::string> ("New Record! Best score = " + std::to_string(maxScore)) : 
+              player1BestScore = std::make_shared<std::string> ("Best score = " + std::to_string(maxScore));
   
-  if(newRecord2)
-    player2BestScore = std::make_shared<std::string> ("Player 2: New Record: your best score is " + std::to_string(maxScore2));
-  else
-    player2BestScore = std::make_shared<std::string> ("Player 2: Your best score is " + std::to_string(maxScore2));
+  newRecord2? player2BestScore = std::make_shared<std::string> ("New Record! Best score = " + std::to_string(maxScore2)) :
+              player2BestScore = std::make_shared<std::string> ("Best score = " + std::to_string(maxScore2));
   
-  Text gText(std::move(gameOver), white, arial, 44, gText_xPos, gText_yPos);
-  Text b1Text(std::move(player1BestScore), white, arial, 22, b1Text_xPos, b1Text_yPos);
-  Text b2Text(std::move(player2BestScore), white, arial, 22, b2Text_xPos, b2Text_yPos);
+  Text gText(std::move(gameOver),               red, gameOverF, 44, gText_xPos, gText_yPos);
+  Text c1Text(std::move(player1CurrentScore), white, arial, 20, c1Text_xPos, c1Text_yPos);
+  Text b1Text(std::move(player1BestScore),    white, arial, 20, b1Text_xPos, b1Text_yPos);
+  Text c2Text(std::move(player2CurrentScore), white, arial, 20, c2Text_xPos, c2Text_yPos);
+  Text b2Text(std::move(player2BestScore),    white, arial, 20, b2Text_xPos, b2Text_yPos);
   
   gText.SetTexture(renderer.GetRenderer());
   gText.PositionElement(false);
+
+  player1User.SetTxtSurface();
+  player1User.SetTexture(renderer.GetRenderer());
+  player1User.PositionElement(false);
+
+  player2User.SetTxtSurface();
+  player2User.SetTexture(renderer.GetRenderer());
+  player2User.PositionElement(false);
+
+  c1Text.SetTexture(renderer.GetRenderer());
+  c1Text.PositionElement(false);
+  c2Text.SetTexture(renderer.GetRenderer());
+  c2Text.PositionElement(false);
+
   b1Text.SetTexture(renderer.GetRenderer());
   b1Text.PositionElement(false);
   b2Text.SetTexture(renderer.GetRenderer());
   b2Text.PositionElement(false);
 
   renderer.CopyToRender(gText);
+
+  renderer.CopyToRender(player1User);
+  renderer.CopyToRender(player2User);
+
+  renderer.CopyToRender(c1Text);
+  renderer.CopyToRender(c2Text);
+
   renderer.CopyToRender(b1Text);
   renderer.CopyToRender(b2Text);
 

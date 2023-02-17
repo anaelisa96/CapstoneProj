@@ -24,24 +24,6 @@ string
 renderer.h
 /home/workspace/CppND-Capstone-Snake-Game/src/renderer.h
 
-/home/workspace/CppND-Capstone-Snake-Game/src/game.cpp
-game.h
-/home/workspace/CppND-Capstone-Snake-Game/src/game.h
-iostream
--
-SDL.h
-/home/workspace/CppND-Capstone-Snake-Game/src/SDL.h
-string
--
-welcomeScreen.h
-/home/workspace/CppND-Capstone-Snake-Game/src/welcomeScreen.h
-fstream
--
-memory
--
-unistd.h
--
-
 /home/workspace/CppND-Capstone-Snake-Game/src/game.h
 random
 -
@@ -57,6 +39,20 @@ snake.h
 /home/workspace/CppND-Capstone-Snake-Game/src/snake.h
 welcomeScreen.h
 /home/workspace/CppND-Capstone-Snake-Game/src/welcomeScreen.h
+
+/home/workspace/CppND-Capstone-Snake-Game/src/main.cpp
+iostream
+-
+controller.h
+/home/workspace/CppND-Capstone-Snake-Game/src/controller.h
+game.h
+/home/workspace/CppND-Capstone-Snake-Game/src/game.h
+renderer.h
+/home/workspace/CppND-Capstone-Snake-Game/src/renderer.h
+memory
+-
+fstream
+-
 
 /home/workspace/CppND-Capstone-Snake-Game/src/renderer.h
 vector

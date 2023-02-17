@@ -43,7 +43,18 @@ void Text::SetTxtColor(Colors color){
     case white:
         _color = { 255, 255, 255, 255 };
         break;
-    
+    case blue:
+        _color = {  89, 203, 232, 255 };
+        break;
+    case red:
+        _color = { 255,   0,  0, 255 };
+        break;
+    case green:
+        _color = { 109, 252, 24, 255 };
+        break;
+    case yellow:
+        _color = { 255, 255,  0, 255 };
+        break;
     default:
         _color = { 255, 255, 255, 255 }; // Text set to white by default
         break;
@@ -56,7 +67,15 @@ void Text::SetTxtFont(Fonts font, int size){
     case arial:
         _font = TTF_OpenFont("arial.ttf", size);
         break;
-    
+    case welcomeF:
+        _font = TTF_OpenFont("welcome.ttf", size);
+        break;
+    case gameOverF:
+        _font = TTF_OpenFont("gameOver.ttf", size);
+        break;
+    case textF:
+        _font = TTF_OpenFont("text.ttf", size);
+        break;
     default:
         _font = TTF_OpenFont("arial.ttf", size); // Text font set to arial by default
         break;
