@@ -12,8 +12,7 @@ void Snake::Update(Snake otherSnake) {
       static_cast<int>(head_x),
       static_cast<int>(head_y)};  // Capture the head's cell after updating.
 
-  // Update all of the body vector items if the snake head has moved to a new
-  // cell.
+  // Update all of the body vector items if the snake head has moved to a newcell.
   // The body of the snake is updated only if the snake head has moved to a new cell.
   if (current_cell.x != prev_cell.x || current_cell.y != prev_cell.y) {
     UpdateBody(current_cell, prev_cell, otherSnake);
@@ -52,10 +51,8 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell, 
 
   // If the snake is not growing, the tail must be removed
   if (!growing) {
-    // Remove the tail from the vector.
     body.erase(body.begin());
   } else {
-    // If snake must grow, the tail is not removed and the snake size increases
     growing = false;
     size++;
   }
@@ -83,7 +80,6 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell, 
 
 void Snake::GrowBody() { growing = true; }
 
-// Inefficient method to check if cell is occupied by snake.
 // Check if a cell is occupied by the snake
 // It is used to place food in the game because we do not want to place food on top of the snake
 bool Snake::SnakeCell(int x, int y) {

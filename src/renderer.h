@@ -11,19 +11,16 @@ class Renderer {
            const std::size_t grid_width, const std::size_t grid_height);
   ~Renderer();
 
-  // Render the snake object and the food
-  //void Render(Snake const snake, SDL_Point const &food, bool &welcomeScreenOn);
   void Render(Snake const snake, Snake const snake2, SDL_Point const &food, bool &welcomeScreenOn);
-  // Updates the top bar of the screen with the score and the frames per second
-  void UpdateWindowTitle(int score, int score2, int fps);
-  // Add
+  void UpdateWindowTitle(int player1Score, int player2Score, int fps);
+  
+  // Template function to copy objects of different classes to render
   template <typename T>
   void CopyToRender(T obj){
     obj.CopyToRender(sdl_renderer);
   }
-  SDL_Renderer* GetRenderer(){
-    return sdl_renderer;
-  }
+
+  SDL_Renderer* GetRenderer();
   void ClearScreen();
   void PresentRenderer();
 

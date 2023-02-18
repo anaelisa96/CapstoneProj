@@ -1,48 +1,45 @@
 #include "game.h"
 #include <iostream>
-#include "SDL.h"
-
-// Add
-#include <string>
-#include "welcomeScreen.h"
 #include <fstream>
 #include <memory>
 #include <unistd.h>
 
-#define wText_xPos       (int)screen_width/2 - 286
-#define wText_yPos       (int)screen_height  / 10
-#define tText_xPos       (int)screen_width/2 - 290
-#define tText_yPos       (int)screen_height * 10 / 15
-#define player1User_xPos (int)screen_width/2 - 250
-#define player1User_yPos (int)screen_height  - 180
-#define player2User_xPos (int)screen_width/2 - 250
-#define player2User_yPos (int)screen_height  - 150
-#define eText_xPos       (int)screen_width/2
-#define eText_yPos       (int)screen_height -   50
-#define gText_xPos       200
-#define gText_yPos       100
+#define wText_xPos       40
+#define wText_yPos       64
+#define tText_xPos       30
+#define tText_yPos       427
+#define player1User_xPos 70
+#define player1User_yPos 480
+#define player2User_xPos 70
+#define player2User_yPos 520
+#define eText_xPos       400
+#define eText_yPos       590
+#define gText_xPos       130
+#define gText_yPos       50
 #define c1Text_xPos      100
-#define c1Text_yPos      230
+#define c1Text_yPos      280
 #define c2Text_xPos      100
-#define c2Text_yPos      330
+#define c2Text_yPos      430
 #define b1Text_xPos      100
-#define b1Text_yPos      260
+#define b1Text_yPos      310
 #define b2Text_xPos      100
-#define b2Text_yPos      360
-#define img_xPos         (int)screen_width/2
-#define img_yPos         (int)screen_height/2 - 60
+#define b2Text_yPos      460
+#define rsText_xPos      100
+#define rsText_yPos      560
+#define img_xPos         305
+#define img_yPos         280
 
 Game::Game(std::size_t screen_width, std::size_t screen_height, std::size_t grid_width, std::size_t grid_height,
            std::shared_ptr<std::string> welcome, std::shared_ptr<std::string> player1Username,
            std::shared_ptr<std::string> player2Username, std::shared_ptr<std::string> pressTab, 
-           std::shared_ptr<std::string> pressEnter, const char* imgPath)
-    : wText(std::move(welcome),    green, welcomeF, 28, wText_xPos, wText_yPos),
-      tText(std::move(pressTab),   white, textF, 16, tText_xPos, tText_yPos),
-      player1User(std::move(player1Username),   white, textF, 16, player1User_xPos, player1User_yPos),
-      player2User(std::move(player2Username),   white, textF, 16, player2User_xPos, player2User_yPos),
-      eText(std::move(pressEnter), white, arial, 22, eText_xPos, eText_yPos),
+           std::shared_ptr<std::string> pressEnter, std::shared_ptr<const char*> imgPath)
+    : wText(std::move(welcome),    green, welcomeF, 66, wText_xPos, wText_yPos),
+      tText(std::move(pressTab),   green, textF, 20, tText_xPos, tText_yPos),
+      player1User(std::move(player1Username),   green, textF, 19, player1User_xPos, player1User_yPos),
+      player2User(std::move(player2Username),   green, textF, 19, player2User_xPos, player2User_yPos),
+      eText(std::move(pressEnter), green, enterF, 22, eText_xPos, eText_yPos),
       img(imgPath, img_xPos, img_yPos), 
-      snake(grid_width, grid_height), // position the snake in the screen
+      snake(grid_width, grid_height),
       snake2(grid_width, grid_height),
       engine(dev()), // random number generation tool using dev as seed
       random_w(0, static_cast<int>(grid_width - 1)), // random number between 0 and the grid width
@@ -52,7 +49,6 @@ Game::Game(std::size_t screen_width, std::size_t screen_height, std::size_t grid
   PlaceFood(); // place food on the screen
 }
 
-// Edit
 // Game loop
 void Game::Run(Controller const &controller, Renderer &renderer, std::size_t target_frame_duration) {
   Uint32 title_timestamp = SDL_GetTicks(); // time stamp
@@ -61,34 +57,37 @@ void Game::Run(Controller const &controller, Renderer &renderer, std::size_t tar
   Uint32 frame_duration;
   int frame_count = 0;
 
-  // Add
+  // Set elements surface and texture to be presented in the welcome screen
   PrepareWelcomeScreen(renderer);
-  renderer.ClearScreen();  
-  SDL_StartTextInput();
+  // Clear Screen
+  renderer.ClearScreen();
 
-  bool running = true; // tell if the game is running, it is initally set to true
+  // Flags to keep track of the game flow
+  bool running = true;
   bool welcomeScreenOn = true;
   bool insertPlayer1Username = true;
 
-  while (running) {
-        //Add
-    bool renderInputText = false;
-    frame_start = SDL_GetTicks(); // timestamp for the frame start
+  SDL_StartTextInput();
 
+  while (running) {
+
+    bool renderInputText = false;
+    frame_start = SDL_GetTicks();
+
+    // Game input: keybord keys for usernames typing or snakes control
     controller.HandleInput(running, welcomeScreenOn, renderInputText, insertPlayer1Username, snake, snake2, player1User, player2User, renderer);
-    Update(renderer, running, renderInputText, welcomeScreenOn);
+    Update(renderer, running, renderInputText, welcomeScreenOn); 
     renderer.Render(snake, snake2, food, welcomeScreenOn);
 
-    frame_end = SDL_GetTicks(); // timestamp for the frame end
+    frame_end = SDL_GetTicks();
 
-    // Keep track of how long each loop through the input/update/render cycle
-    // takes.
+    // Keep track of how long each loop through the input/update/render cycle takes.
     frame_count++;
     frame_duration = frame_end - frame_start;
 
     // After every second, update the window title.
     if (frame_end - title_timestamp >= 1000) {
-      renderer.UpdateWindowTitle(score, score2, frame_count);
+      renderer.UpdateWindowTitle(_player1Score, _player2Score, frame_count);
       frame_count = 0;
       title_timestamp = frame_end;
     }
@@ -100,9 +99,10 @@ void Game::Run(Controller const &controller, Renderer &renderer, std::size_t tar
       SDL_Delay(target_frame_duration - frame_duration);
     }
   }
+  // At the end of the game: Save players usernames, compute best score and present gameover screen
   SaveUsername();
-  BestScoreComputation(maxScore, maxScore2, newRecord1, newRecord2);
-  PresentGameOverScreen(renderer, maxScore, maxScore2, newRecord1, newRecord2);
+  BestScoreComputation();
+  PresentGameOverScreen(renderer);
 }
 
 void Game::PlaceFood() {
@@ -111,8 +111,7 @@ void Game::PlaceFood() {
     // Get random coordinates on the screen
     x = random_w(engine);
     y = random_h(engine);
-    // Check that the location is not occupied by a snake item before placing
-    // food.
+    // Check that the location is not occupied by a snake item before placing food.
     if (!snake.SnakeCell(x, y) && !snake2.SnakeCell(x,y)) {
       // Place food at he random coordinates in the screen and get out of the loop.
       food.x = x;
@@ -123,25 +122,23 @@ void Game::PlaceFood() {
 }
 
 void Game::Update(Renderer &renderer, bool &running, bool &renderInputText, bool &welcomeScreenOn) {
+  // Occurs before the game actually starts
   if (welcomeScreenOn){
-    if( renderInputText && player1User.GetInputText().get()->c_str() != "Player 1 Username: " ){
-      
+    if( renderInputText){
+      // Clear screen
       renderer.ClearScreen();
-
+      // Set surface, texture and position for players 1 and 2 username objects
       player1User.SetTxtSurface();
       player1User.SetTexture(renderer.GetRenderer());
-      player1User.PositionElement(false);
-      renderer.CopyToRender(player1User);
-    }
-    if( renderInputText && player2User.GetInputText().get()->c_str() != "Player 2 Username: " ){
-      
-      renderer.ClearScreen();
-
+      player1User.PositionElement();
       player2User.SetTxtSurface();
       player2User.SetTexture(renderer.GetRenderer());
-      player2User.PositionElement(false);
+      player2User.PositionElement();
+      // Copý players 1 and 2 username elements to render
       renderer.CopyToRender(player2User);
+      renderer.CopyToRender(player1User);
     }
+    // Copy remainder welcome screen elements to render
     renderer.CopyToRender(wText);
     renderer.CopyToRender(tText);
     renderer.CopyToRender(player1User);
@@ -150,98 +147,97 @@ void Game::Update(Renderer &renderer, bool &running, bool &renderInputText, bool
     renderer.CopyToRender(eText);
     return;
   }
-  //if (!snake.alive) return;
+  
+  // If one of the snakes die the game is over - GameOver screen is presented
   if (!snake.alive || !snake2.alive){
     running = false;
     return;
   }
 
-  // Update the snake position
+  // Update the snakes position
   snake.Update(snake2);
   snake2.Update(snake);
 
-  // Get head position
+  // Get head position for snake 1 and snake 2
   int new_x = static_cast<int>(snake.head_x);
   int new_y = static_cast<int>(snake.head_y);
   int new_x2 = static_cast<int>(snake2.head_x);
   int new_y2 = static_cast<int>(snake2.head_y);
 
-  // Check if there's food over here
-  // Check if head position is equal to the food position
+  // Check if head of snake 1 position is equal to the food position
   if (food.x == new_x && food.y == new_y) {
-    score++; // Increase the score
-    PlaceFood(); // Placed foo at other random position
-    // Grow snake and increase speed.
-    snake.GrowBody(); // The snake grow
-    snake.speed += 0.02; // Snake speed increases
+    _player1Score++;
+    PlaceFood();
+    snake.GrowBody();
+    snake.speed += 0.02;
   }
 
+  // Check if head of snake 2 position is equal to the food position
   if (food.x == new_x2 && food.y == new_y2) {
-    score2++; // Increase the score2
-    PlaceFood(); // Placed foo at other random position
-    // Grow snake and increase speed.
-    snake2.GrowBody(); // The snake grow
-    snake2.speed += 0.02; // Snake speed increases
+    _player2Score++;
+    PlaceFood();
+    snake2.GrowBody();
+    snake2.speed += 0.02;
   }
 }
 
-int Game::GetScore()  const { return score; }
-int Game::GetScore2() const { return score2; }
-int Game::GetSize() const { return snake.size; }
-int Game::GetSize2() const { return snake2.size; }
 void Game::SaveUsername() {
-  _player1Username = player1User.GetUsername();
-  _player2Username = player2User.GetUsername();
-  }
-std::string Game::GetPlayer1Username(){return _player1Username;}
-std::string Game::GetPlayer2Username(){return _player2Username;}
+  _player1Username = player1User.GetUsername().substr(10);
+  _player2Username = player2User.GetUsername().substr(10);
+}
 
 void Game::PrepareWelcomeScreen(Renderer &renderer){
+
+  // Set surface ans texture for welcome screen elements
   wText.SetTexture(renderer.GetRenderer());
-  wText.PositionElement(false);
+  wText.PositionElement();
   tText.SetTexture(renderer.GetRenderer());
-  tText.PositionElement(false);
+  tText.PositionElement();
   player1User.SetTexture(renderer.GetRenderer());
-  player1User.PositionElement(false);
+  player1User.PositionElement();
   player2User.SetTexture(renderer.GetRenderer());
-  player2User.PositionElement(false);
+  player2User.PositionElement();
   img.SetTexture(renderer.GetRenderer());
-  img.PositionElement(true);
+  img.PositionElement();
   eText.SetTexture(renderer.GetRenderer());
-  eText.PositionElement(false);
+  eText.PositionElement();
 }
 
-void Game::BestScoreComputation(int &maxScore, int &maxScore2, bool &newRecord1, bool &newRecord2){
+void Game::BestScoreComputation(){
 
-  std::fstream outputFile("outBestScores.txt", std::ios::app | std::ios::in | std::ios::out);
+  // Open the file
+  std::fstream outputFile("scores.txt", std::ios::app | std::ios::in | std::ios::out);
+
   std::string myline;
-  maxScore  = 0;
-  maxScore2 = 0;
-  newRecord1 = false;
-  newRecord2 = false;
 
+  // Check if file was successfully opened
+  // Reading the file...
   if ( outputFile.is_open() ){
     while ( outputFile ) {
       std::getline (outputFile, myline);
       std::string score;
-      if (myline.find(GetPlayer1Username().substr(19) + " ") != std::string::npos){
+      // Find previous scores of player 1 and player 2 in scores.txt (through their usernames).
+      // Save their maximum scores in the respective variables
+      if (myline.find(_player1Username + " ") != std::string::npos){
         score = myline.substr(myline.find(":") + 1) ;
-        if (maxScore < std::atoi(score.c_str()))
-          maxScore = std::atoi(score.c_str());
+        if (_player1MaxScore < std::atoi(score.c_str()))
+          _player1MaxScore = std::atoi(score.c_str());
       }
-      else if (myline.find(GetPlayer2Username().substr(19) + " ") != std::string::npos){
+      else if (myline.find(_player2Username + " ") != std::string::npos){
         score = myline.substr(myline.find(":") + 1) ;
-        if (maxScore2 < std::atoi(score.c_str()))
-          maxScore2 = std::atoi(score.c_str());
+        if (_player2MaxScore < std::atoi(score.c_str()))
+          _player2MaxScore = std::atoi(score.c_str());
       }
     }
-    if (maxScore < GetScore()){
-      newRecord1 = true;
-      maxScore = GetScore();
+    // Check if current score is higer than the maximum score previouly obtained
+    // Perform the replacement in the positive scenario
+    if (_player1MaxScore < _player1Score){
+      _player1NewRecord = true;
+      _player1MaxScore = _player1Score;
     }
-    if (maxScore2 < GetScore2()){
-      newRecord2 = true;
-      maxScore2 = GetScore2();
+    if (_player2MaxScore < _player2Score){
+      _player2NewRecord = true;
+      _player2MaxScore = _player2Score;
     }
   }
   else
@@ -249,84 +245,104 @@ void Game::BestScoreComputation(int &maxScore, int &maxScore2, bool &newRecord1,
     std::cout << "Could not open the file" << std::endl;
   }
 
+  // Close the file
   outputFile.close();
 
-  outputFile.open("outBestScores.txt", std::ios::app | std::ios::in | std::ios::out); 
+  // Reopen the file for writing
+  outputFile.open("scores.txt", std::ios::app | std::ios::in | std::ios::out); 
 
+  // Check if the file was successfully opened
   if ( outputFile.is_open() ){
-    outputFile << GetPlayer1Username().substr(19) << " -->  " << "Score: " << GetScore()  << "\n" 
-               << GetPlayer2Username().substr(19) << " -->  " << "Score: " << GetScore2() << "\n";
+    // Write players usernames and scores
+    outputFile << _player1Username << " -->  " << "Score: " << _player1Score  << "\n" 
+               << _player2Username << " -->  " << "Score: " << _player2Score << "\n";
   }
   else
   {
     std::cout << "Couldn't open output file!" << std::endl;
   }
   
+  // Close the file
   outputFile.close();
-
-  std::cout << "Player 1 max score is " << maxScore << std::endl;
-  std::cout << "Player 2 max score is " << maxScore2 << std::endl; 
-
 }
 
-void Game::PresentGameOverScreen(Renderer &renderer, int &maxScore, int &maxScore2, bool &newRecord1, bool &newRecord2){
+void Game::PresentGameOverScreen(Renderer &renderer){
 
+  // Clear the screen
   renderer.ClearScreen();
 
-  gameOver = std::make_shared<std::string> ("Game Over");
+  // Game over screen title text
+  _gameOver = std::make_shared<std::string> ("Game Over");
 
-  player1User.EditText(std::make_shared<std::string> (player1User.GetInputText().get()->substr(19) + ":"));
-  player2User.EditText(std::make_shared<std::string> (player2User.GetInputText().get()->substr(19) + ":"));
-  player1User.EditPosition(100, 200);
-  player2User.EditPosition(100, 300);
+  // Change username objects text and position to reuse
+  player1User.EditText(std::make_shared<std::string> (_player1Username));
+  player2User.EditText(std::make_shared<std::string> (_player2Username));
+  player1User.EditPosition(100, 250);
+  player2User.EditPosition(100, 400);
 
-  player1CurrentScore = std::make_shared<std::string> ("Current score = " + std::to_string(GetScore()));
-  player2CurrentScore = std::make_shared<std::string> ("Current score = " + std::to_string(GetScore2()));
+  // Current Scores
+  _player1CurrentScore = std::make_shared<std::string> ("Current score = " + std::to_string(_player1Score));
+  _player2CurrentScore = std::make_shared<std::string> ("Current score = " + std::to_string(_player2Score));
   
-  newRecord1? player1BestScore = std::make_shared<std::string> ("New Record! Best score = " + std::to_string(maxScore)) : 
-              player1BestScore = std::make_shared<std::string> ("Best score = " + std::to_string(maxScore));
+  // Check if one of the players achieved a new record
+  _player1NewRecord? _player1BestScore = std::make_shared<std::string> ("New Record! Best score = " + std::to_string(_player1MaxScore)) : 
+                     _player1BestScore = std::make_shared<std::string> ("Best score = " + std::to_string(_player1MaxScore));
   
-  newRecord2? player2BestScore = std::make_shared<std::string> ("New Record! Best score = " + std::to_string(maxScore2)) :
-              player2BestScore = std::make_shared<std::string> ("Best score = " + std::to_string(maxScore2));
-  
-  Text gText(std::move(gameOver),               red, gameOverF, 44, gText_xPos, gText_yPos);
-  Text c1Text(std::move(player1CurrentScore), white, arial, 20, c1Text_xPos, c1Text_yPos);
-  Text b1Text(std::move(player1BestScore),    white, arial, 20, b1Text_xPos, b1Text_yPos);
-  Text c2Text(std::move(player2CurrentScore), white, arial, 20, c2Text_xPos, c2Text_yPos);
-  Text b2Text(std::move(player2BestScore),    white, arial, 20, b2Text_xPos, b2Text_yPos);
-  
+  _player2NewRecord? _player2BestScore = std::make_shared<std::string> ("New Record! Best score = " + std::to_string(_player2MaxScore)) :
+                     _player2BestScore = std::make_shared<std::string> ("Best score = " + std::to_string(_player2MaxScore));
+
+  // Check the game result
+  if (_player1Score > _player2Score)
+    _result = std::make_shared<std::string> (_player1Username + " won!");
+  else if (_player1Score < _player2Score)
+    _result = std::make_shared<std::string> (_player2Username + " won!");
+  else
+    _result = std::make_shared<std::string> ("It is a tie!");
+
+  // Create Text objects for GameOver screen
+  Text gText(std::move(_gameOver),                red, gameOverF, 200, gText_xPos, gText_yPos);
+  Text c1Text(std::move(_player1CurrentScore), yellow, textF,  20, c1Text_xPos, c1Text_yPos);
+  Text b1Text(std::move(_player1BestScore),    yellow, textF,  20, b1Text_xPos, b1Text_yPos);
+  Text c2Text(std::move(_player2CurrentScore), yellow, textF,  20, c2Text_xPos, c2Text_yPos);
+  Text b2Text(std::move(_player2BestScore),    yellow, textF,  20, b2Text_xPos, b2Text_yPos);
+  Text rsText(std::move(_result),                blue, textF,  24, rsText_xPos, rsText_yPos);
+
+  // Set elements texture and surface, color and position (if needed)
   gText.SetTexture(renderer.GetRenderer());
-  gText.PositionElement(false);
-
+  gText.PositionElement();
+  player1User.SetTxtColor(yellow);
   player1User.SetTxtSurface();
   player1User.SetTexture(renderer.GetRenderer());
-  player1User.PositionElement(false);
-
+  player1User.PositionElement();
+  player2User.SetTxtColor(yellow);
   player2User.SetTxtSurface();
   player2User.SetTexture(renderer.GetRenderer());
-  player2User.PositionElement(false);
-
+  player2User.PositionElement();
+  c1Text.SetTxtSurface();
   c1Text.SetTexture(renderer.GetRenderer());
-  c1Text.PositionElement(false);
+  c1Text.PositionElement();
   c2Text.SetTexture(renderer.GetRenderer());
-  c2Text.PositionElement(false);
-
+  c2Text.PositionElement();
   b1Text.SetTexture(renderer.GetRenderer());
-  b1Text.PositionElement(false);
+  b1Text.PositionElement();
   b2Text.SetTexture(renderer.GetRenderer());
-  b2Text.PositionElement(false);
+  b2Text.PositionElement();
+  rsText.SetTexture(renderer.GetRenderer());
+  rsText.PositionElement();
 
+  // Copy elements to render
   renderer.CopyToRender(gText);
-
   renderer.CopyToRender(player1User);
   renderer.CopyToRender(player2User);
-
   renderer.CopyToRender(c1Text);
   renderer.CopyToRender(c2Text);
-
   renderer.CopyToRender(b1Text);
   renderer.CopyToRender(b2Text);
+  renderer.CopyToRender(rsText);
 
+  // Present the screen
   renderer.PresentRenderer();
-  sleep(5);
+
+  // Screen is displayed for 10 seconds
+  sleep(10);
 }

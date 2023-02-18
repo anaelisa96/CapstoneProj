@@ -2,10 +2,7 @@
 #include "controller.h"
 #include "game.h"
 #include "renderer.h"
-
-// Add
 #include <memory>
-#include <fstream>
 
 int main() {
   // Constants useful for the project
@@ -16,12 +13,12 @@ int main() {
   constexpr std::size_t kGridWidth{32};
   constexpr std::size_t kGridHeight{32};
 
-  std::shared_ptr<std::string> welcome (new std::string("Welcome to the Snake Game"));
-  std::shared_ptr<std::string> player1Username (new std::string("Player 1 Username: "));
-  std::shared_ptr<std::string> player2Username (new std::string("Player 2 Username: "));
-  std::shared_ptr<std::string> pressTab (new std::string("Type you usernames (press TAB for player 2)"));
-  std::shared_ptr<std::string> pressEnter (new std::string("Press Enter to start the game!"));
-  const char *imgPath = "mySnake2.bmp";
+  std::shared_ptr<std::string> welcome (new std::string("Snake Game"));
+  std::shared_ptr<std::string> player1Username (new std::string("Player 1: "));
+  std::shared_ptr<std::string> player2Username (new std::string("Player 2: "));
+  std::shared_ptr<std::string> pressTab (new std::string("Type you usernames (TAB for player 2)"));
+  std::shared_ptr<std::string> pressEnter (new std::string("Enter to start the game!"));
+  std::shared_ptr<const char*> imgPath (new const char*("snake.bmp"));
 
   // Create a Renderer, a Controller and a Game object
   Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
