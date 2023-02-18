@@ -18,7 +18,7 @@ int main() {
   std::shared_ptr<std::string> player2Username (new std::string("Player 2: "));
   std::shared_ptr<std::string> pressTab (new std::string("Type you usernames (TAB for player 2)"));
   std::shared_ptr<std::string> pressEnter (new std::string("Enter to start the game!"));
-  std::shared_ptr<const char*> imgPath (new const char*("snake.bmp"));
+  std::shared_ptr<const char*> imgPath (new const char*("../Image/snake.bmp"));
 
   // Create a Renderer, a Controller and a Game object
   Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);

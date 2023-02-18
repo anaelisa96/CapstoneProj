@@ -46,48 +46,48 @@ void Text::HandleInputText(SDL_Event &e, bool &renderInputText, bool &welcomeScr
 void Text::SetTxtColor(Colors color){
     switch (color)
     {
-    case white:
-        _color = { 255, 255, 255, 255 };
-        break;
-    case blue:
-        _color = {  89, 203, 232, 255 };
-        break;
-    case red:
-        _color = { 173,   0,  14, 255 };
-        break;
-    case green:
-        _color = { 121, 170,  47, 255 };
-        break;
-    case yellow:
-        _color = { 161, 118,  27, 255 };
-        break;
-    default:
-        _color = { 255, 255, 255, 255 };
-        break;
-    }
+        case white:
+            _color = { 255, 255, 255, 255 };
+            break;
+        case blue:
+            _color = {  89, 203, 232, 255 };
+            break;
+        case red:
+            _color = { 173,   0,  14, 255 };
+            break;
+        case green:
+            _color = { 121, 170,  47, 255 };
+            break;
+        case yellow:
+            _color = { 161, 118,  27, 255 };
+            break;
+        default:
+            _color = { 255, 255, 255, 255 };
+            break;
+        }
 }
 
 void Text::SetTxtFont(Fonts font, int size){
     switch (font)
     {
-    case arial:
-        _font = TTF_OpenFont("Fonts/arial.ttf", size);
-        break;
-    case welcomeF:
-        _font = TTF_OpenFont("Fonts/welcome.ttf", size);
-        break;
-    case gameOverF:
-        _font = TTF_OpenFont("Fonts/gameOver.ttf", size);
-        break;
-    case textF:
-        _font = TTF_OpenFont("Fonts/text.ttf", size);
-        break;
-    case enterF:
-        _font = TTF_OpenFont("Fonts/enter.ttf", size);
-        break;
-    default:
-        _font = TTF_OpenFont("Fonts/arial.ttf", size); // Text font set to arial by default
-        break;
+        case arial:
+            _font = TTF_OpenFont("../Fonts/arial.ttf", size);
+            break;
+        case welcomeF:
+            _font = TTF_OpenFont("../Fonts/welcome.ttf", size);
+            break;
+        case gameOverF:
+            _font = TTF_OpenFont("../Fonts/gameOver.ttf", size);
+            break;
+        case textF:
+            _font = TTF_OpenFont("../Fonts/text.ttf", size);
+            break;
+        case enterF:
+            _font = TTF_OpenFont("../Fonts/enter.ttf", size);
+            break;
+        default:
+            _font = TTF_OpenFont("../Fonts/arial.ttf", size); // Text font set to arial by default
+            break;
     }
 }
 
