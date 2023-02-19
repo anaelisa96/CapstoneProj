@@ -11,14 +11,14 @@ This is the Capstone Project project I decided to do for Udacity C++ Nanodegree 
 * **GameOver Screen:** The game overs in one of the following 3 scenarios: one of the snakes hits itself, the two snakes collide or the game windows is closed. In these scenarios, a GameOver screen is presented with a title, the players usernames, their current scores, their best scores, the info that a new record was achieved, if that is the case, and lastly the result of the game (who won or if it was a tie). The game window automatically closes 10 seconds after the GameOver screen is presented.
 
 ## How this project satisfy the rubric items
-* ***Loops, Functions, I/O**
+* **Loops, Functions, I/O**
   - **A variety of control structures are used in the project. The project is clearly organized into functions.**
   Along the code multiple if statements, switch statements and while loops are used to control variables and vary the code flow according to different situations: *game.cpp - lines 215 to 263; controller.cpp - lines 13 to 60 (there are other examples!).*
   - **The project reads data from an external file or writes data to a file as part of the necessary operation of the program.**
   The program keeps tracking of the players' scores obtained at each time the game is played by writing them down to an external file. In addition, the program also reads from that file to check for best score or new records of the current players: *game.cpp - lines 206 to 267.*
   - **The project accepts input from a user as part of the necessary operation of the program.**
   The program accepts input from the keyboard when presents a welcome screen for the two players insert their usernames and during the game itself to move both snakes: *welcomeScreen.cpp - lines 22 to 44; controller.cpp - lines 10 to 61, respectively.*
-* ***Object Oriented Programming**
+* **Object Oriented Programming**
   - **The project code is organized into classes with class attributes to hold the data, and class methods to perform tasks.**
   - **All class data members are explicitly specified as public, protected, or private.**
   - **All class member functions document their effects, either through function names, comments, or formal documentation. Member functions do not change program state in undocumented ways.**
