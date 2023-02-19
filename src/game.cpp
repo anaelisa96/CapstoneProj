@@ -38,7 +38,7 @@ Game::Game(std::size_t screen_width, std::size_t screen_height, std::size_t grid
       player1User(std::move(player1Username),   green, textF, 19, player1User_xPos, player1User_yPos),
       player2User(std::move(player2Username),   green, textF, 19, player2User_xPos, player2User_yPos),
       eText(std::move(pressEnter), green, enterF, 22, eText_xPos, eText_yPos),
-      img(imgPath, img_xPos, img_yPos), 
+      img(std::move(imgPath), img_xPos, img_yPos), 
       snake(grid_width, grid_height),
       snake2(grid_width, grid_height),
       engine(dev()), // random number generation tool using dev as seed
